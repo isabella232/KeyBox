@@ -91,7 +91,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
     public String loginSubmit() {
         String retVal = SUCCESS;
 
-        if (auth.getOauthToken() != null || !auth.getOauthToken().equals("")) {
+        if (auth.getOauthToken() != null && !auth.getOauthToken().equals("")) {
           GoogleIdToken idToken = null;
           try {
             idToken = GoogleIdToken.parse(new JacksonFactory(), auth.getOauthToken());
@@ -184,7 +184,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
             addFieldError("auth.password", "Required");
         }
         // validate auth token
-        if (auth.getOauthToken() != null || !auth.getOauthToken().equals("")) {
+        if (auth.getOauthToken() != null && !auth.getOauthToken().equals("")) {
           String idTokenString = auth.getOauthToken();
         
           GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
