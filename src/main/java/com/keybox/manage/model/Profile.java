@@ -23,7 +23,7 @@ import java.util.List;
 public class Profile {
     Long id;
     String nm;
-    String desc;
+    String descr;
     List<HostSystem> hostSystemList;
 
     public Long getId() {
@@ -50,11 +50,11 @@ public class Profile {
         this.nm = nm;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescr() {
+        return descr;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 }

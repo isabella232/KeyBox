@@ -141,7 +141,7 @@
                     <div class="modal-body">
                         <s:form action="saveProfile" class="save_profile_form_add">
                             <s:textfield name="profile.nm" label="Name" size="15"/>
-                            <s:textarea name="profile.desc" label="Profile Description" rows="5" cols="25"/>
+                            <s:textarea name="profile.descr" label="Profile Description" rows="5" cols="25"/>
                             <s:hidden name="sortedSet.orderByDirection"/>
                             <s:hidden name="sortedSet.orderByField"/>
                          </s:form>
@@ -166,7 +166,7 @@
                             <div class="row">
                                 <s:form action="saveProfile" id="save_profile_form_edit_%{id}">
                                     <s:textfield name="profile.nm" value="%{nm}" label="Name" size="15"/>
-                                    <s:textarea name="profile.desc" value="%{desc}" label="Profile Description" rows="5"
+                                    <s:textarea name="profile.descr" value="%{descr}" label="Profile Description" rows="5"
                                                 cols="25"/>
                                     <s:hidden name="profile.id" value="%{id}"/>
                                     <s:hidden name="sortedSet.orderByDirection"/>

@@ -61,7 +61,7 @@ public class ProfileDB {
                 Profile profile = new Profile();
                 profile.setId(rs.getLong("id"));
                 profile.setNm(rs.getString("nm"));
-                profile.setDesc(rs.getString("desc"));
+                profile.setDescr(rs.getString("descr"));
                 profileList.add(profile);
 
             }
@@ -96,7 +96,7 @@ public class ProfileDB {
                 Profile profile = new Profile();
                 profile.setId(rs.getLong("id"));
                 profile.setNm(rs.getString("nm"));
-                profile.setDesc(rs.getString("desc"));
+                profile.setDescr(rs.getString("descr"));
                 profileList.add(profile);
 
             }
@@ -151,7 +151,7 @@ public class ProfileDB {
                 profile = new Profile();
                 profile.setId(rs.getLong("id"));
                 profile.setNm(rs.getString("nm"));
-                profile.setDesc(rs.getString("desc"));
+                profile.setDescr(rs.getString("descr"));
                 profile.setHostSystemList(ProfileSystemsDB.getSystemsByProfile(con, profileId));
 
             }
@@ -176,9 +176,9 @@ public class ProfileDB {
         Connection con = null;
         try {
             con = DBUtils.getConn();
-            PreparedStatement stmt = con.prepareStatement("insert into profiles (nm, desc) values (?,?)");
+            PreparedStatement stmt = con.prepareStatement("insert into profiles (nm, descr) values (?,?)");
             stmt.setString(1, profile.getNm());
-            stmt.setString(2, profile.getDesc());
+            stmt.setString(2, profile.getDescr());
             stmt.execute();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs != null && rs.next()) {
@@ -205,9 +205,9 @@ public class ProfileDB {
         Connection con = null;
         try {
             con = DBUtils.getConn();
-            PreparedStatement stmt = con.prepareStatement("update profiles set nm=?, desc=? where id=?");
+            PreparedStatement stmt = con.prepareStatement("update profiles set nm=?, descr=? where id=?");
             stmt.setString(1, profile.getNm());
-            stmt.setString(2, profile.getDesc());
+            stmt.setString(2, profile.getDescr());
             stmt.setLong(3, profile.getId());
             stmt.execute();
             DBUtils.closeStmt(stmt);

@@ -89,7 +89,7 @@
         <p>Select the systems below to be assigned to the current profile.</p>
 
         <h4><s:property value="profile.nm"/></h4>
-        <p class="small"><s:property value="profile.desc"/></p>
+        <p class="small"><s:property value="profile.descr"/></p>
 
 
         <s:if test="sortedSet.itemList!= null && !sortedSet.itemList.isEmpty()">

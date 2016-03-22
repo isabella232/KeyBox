@@ -124,7 +124,7 @@ public class GoogleAuthUtil {
                     user.setId(UserDB.insertUser(con, user));
                     Profile profile = new Profile();
                     profile.setNm("private_" + auth.getUsername() + "_" + user.getId());
-                    profile.setDesc("private profile for " + auth.getUsername());
+                    profile.setDescr("private profile for " + auth.getUsername());
                     List<Long> profUserList = new ArrayList<Long>();
                     Long profileId = ProfileDB.insertProfile(profile);
                     profUserList.add(user.getId());
