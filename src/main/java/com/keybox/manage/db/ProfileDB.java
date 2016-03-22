@@ -170,9 +170,9 @@ public class ProfileDB {
      *
      * @param profile profile object
      */
-    public static void insertProfile(Profile profile) {
+    public static long insertProfile(Profile profile) {
 
-
+        Long profileId=null;
         Connection con = null;
         try {
             con = DBUtils.getConn();
@@ -180,6 +180,10 @@ public class ProfileDB {
             stmt.setString(1, profile.getNm());
             stmt.setString(2, profile.getDesc());
             stmt.execute();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs != null && rs.next()) {
+                profileId = rs.getLong(1);
+            }
             DBUtils.closeStmt(stmt);
 
         } catch (Exception e) {
@@ -187,6 +191,7 @@ public class ProfileDB {
         }
         DBUtils.closeConn(con);
 
+        return profileId;
     }
 
     /**

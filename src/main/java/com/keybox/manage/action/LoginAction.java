@@ -33,7 +33,17 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+import java.util.Arrays;
 /**
  * Action to auth to keybox
  */
@@ -43,6 +53,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
     HttpServletResponse servletResponse;
     HttpServletRequest servletRequest;
     Auth auth;
+    String client = AppConfig.getProperty("googleClientId");
     private final String AUTH_ERROR="Authentication Failed : Login credentials are invalid";
     private final String AUTH_ERROR_NO_PROFILE="Authentication Failed : There are no profiles assigned to this account";
     //check if otp is enabled
@@ -80,7 +91,23 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
     public String loginSubmit() {
         String retVal = SUCCESS;
 
-        String authToken = AuthDB.login(auth);
+        if (auth.getOauthToken() != null || !auth.getOauthToken().equals("")) {
+          GoogleIdToken idToken = null;
+          try {
+            idToken = GoogleIdToken.parse(new JacksonFactory(), auth.getOauthToken());
+          }
+          catch(IOException e) {
+            loginAuditLogger.error("Token Verify Exception: " + e);
+            addActionError(AUTH_ERROR);
+            return(INPUT);
+          }
+          if (idToken != null) {
+            Payload payload = idToken.getPayload();
+            auth.setUsername(payload.getEmail());
+          }
+        }
+
+          String authToken = AuthDB.login(auth);
 
         //get client IP
         String clientIP = null;
@@ -151,14 +178,32 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
                 auth.getUsername().trim().equals("")) {
             addFieldError("auth.username", "Required");
         }
-        if (auth.getPassword() == null ||
-                auth.getPassword().trim().equals("")) {
+        if ((auth.getPassword() == null ||
+                auth.getPassword().trim().equals("")) && 
+                (auth.getOauthToken() == null || auth.getOauthToken().equals(""))) {
             addFieldError("auth.password", "Required");
         }
-
-
+        // validate auth token
+        if (auth.getOauthToken() != null || !auth.getOauthToken().equals("")) {
+          String idTokenString = auth.getOauthToken();
+        
+          GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new ApacheHttpTransport(), new JacksonFactory())
+            .setAudience(Arrays.asList(AppConfig.getProperty("googleClientId")))
+            .setIssuer(AppConfig.getProperty("googleIssuer"))
+            .build();
+         GoogleIdToken idToken = null;
+          try {
+            idToken = verifier.verify(idTokenString);
+          }
+          catch(GeneralSecurityException|IOException e) {
+            loginAuditLogger.error("Token Verify Exception: " + e);
+            addActionError(AUTH_ERROR);
+          }
+          if(idToken == null) {
+            addActionError("Invalid Token");
+          }
+       }
     }
-
 
     public boolean isOtpEnabled() {
         return otpEnabled;
@@ -174,6 +219,14 @@ public class LoginAction extends ActionSupport implements ServletRequestAware, S
 
     public void setAuth(Auth auth) {
         this.auth = auth;
+    }
+
+    public String getClient() {
+       return client;
+    }
+
+    public void setClient(String client) {
+       this.client = client;
     }
 
     public HttpServletResponse getServletResponse() {

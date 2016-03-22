@@ -33,6 +33,7 @@ public class Auth {
     String passwordConfirm;
     String prevPassword;
     String authToken;
+    String oauthToken;
     String otpSecret;
     Long otpToken;
     String salt;
@@ -61,6 +62,14 @@ public class Auth {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
+    }
+
+    public String getOauthToken() {
+        return oauthToken;
+    }
+
+    public void setOauthToken(String oauthToken) {
+        this.oauthToken = oauthToken;
     }
 
     public Long getId() {

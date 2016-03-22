@@ -19,7 +19,9 @@ import com.keybox.manage.model.Auth;
 import com.keybox.manage.model.User;
 import com.keybox.manage.util.DBUtils;
 import com.keybox.manage.util.EncryptionUtil;
-import com.keybox.manage.util.ExternalAuthUtil;
+// import com.keybox.manage.util.ExternalAuthUtil;
+// import com.keybox.manage.util.AzureAuthUtil;
+import com.keybox.manage.util.GoogleAuthUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -44,7 +46,7 @@ public class AuthDB {
      */
     public static String login(Auth auth) {
         //check ldap first
-        String authToken = ExternalAuthUtil.login(auth);
+        String authToken = GoogleAuthUtil.login(auth);
         
         if (StringUtils.isEmpty(authToken)) {
 

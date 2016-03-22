@@ -22,6 +22,7 @@ import com.keybox.manage.util.DBUtils;
 import com.keybox.manage.util.EncryptionUtil;
 import com.keybox.manage.util.RefreshAuthKeyUtil;
 import com.keybox.manage.util.SSHUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -54,10 +55,19 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 
 		super.init(config);
 
+        String DB_EXT_USER = null;
+        String DB_EXT_PASS = null;
+
 		Connection connection = null;
 		Statement statement = null;
 		//check if reset ssh application key is set
 		boolean resetSSHKey = "true".equals(AppConfig.getProperty("resetApplicationSSHKey"));
+        boolean dbUserEnabled = (StringUtils.isNotEmpty(AppConfig.getProperty("dbUserPass")) && StringUtils.isNotEmpty(AppConfig.getProperty("dbUserLogin")));
+        if(dbUserEnabled) {
+            DB_EXT_USER = AppConfig.getProperty("dbUserLogin").toUpperCase();
+            DB_EXT_PASS = AppConfig.getProperty("dbUserPass");
+        }
+        
 		try {
 			connection = DBUtils.getConn();
 			statement = connection.createStatement();
@@ -83,6 +93,11 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 
 				statement.executeUpdate("create table if not exists session_log (id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id INTEGER, session_tm timestamp default CURRENT_TIMESTAMP, foreign key (user_id) references users(id) on delete cascade )");
 				statement.executeUpdate("create table if not exists terminal_log (session_id BIGINT, instance_id INTEGER, system_id INTEGER, output varchar not null, log_tm timestamp default CURRENT_TIMESTAMP, foreign key (session_id) references session_log(id) on delete cascade, foreign key (system_id) references system(id) on delete cascade)");
+
+                //set up user for external connections to db
+                if(dbUserEnabled) {
+				    statement.executeUpdate("CREATE USER IF NOT EXISTS " + DB_EXT_USER + " PASSWORD '" + DB_EXT_PASS + "' ADMIN");
+                }
 
 				//insert default admin user
 				String salt = EncryptionUtil.generateSalt();

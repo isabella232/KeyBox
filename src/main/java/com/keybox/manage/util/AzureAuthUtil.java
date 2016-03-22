@@ -26,11 +26,6 @@ import com.keybox.manage.model.Auth;
 import com.keybox.manage.model.User;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.security.auth.Subject;
-import javax.security.auth.callback.*;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
-import java.io.IOException;
 import java.security.Principal;
 import java.sql.Connection;
 import java.util.UUID;
@@ -39,25 +34,30 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import javax.naming.ServiceUnavailableException;
+
+import com.microsoft.aad.adal4j.AuthenticationContext;
+import com.microsoft.aad.adal4j.AuthenticationResult;
+
 /**
- * External authentication utility for JAAS
+ * External authentication utility for Azure
  */
-public class ExternalAuthUtil {
+public class AzureAuthUtil {
 
-    private static Logger log = LoggerFactory.getLogger(ExternalAuthUtil.class);
+    private static Logger log = LoggerFactory.getLogger(AzureAuthUtil.class);
 
-    public static final boolean externalAuthEnabled = StringUtils.isNotEmpty(AppConfig.getProperty("jaasModule"));
-    private static final String JAAS_CONF = "jaas.conf";
-    private static final String JAAS_MODULE = AppConfig.getProperty("jaasModule");
+    public static final boolean externalAuthEnabled = true;
 
-    static {
-        if(externalAuthEnabled) {
-            System.setProperty("java.security.auth.login.config", ExternalAuthUtil.class.getClassLoader().getResource(".").getPath() + JAAS_CONF);
-        }
-    }
+    private final static String AUTHORITY = AppConfig.getProperty("azureAuthority");
+    private final static String TENANT =  AppConfig.getProperty("azureTennant");
+    private final static String CLIENT_ID =  AppConfig.getProperty("azureClientId");
     
-   
-
     /**
      * external auth login method
      *
@@ -71,28 +71,13 @@ public class ExternalAuthUtil {
 
             Connection con = null;
             try {
-                CallbackHandler handler = new CallbackHandler() {
-
-                    @Override
-                    public void handle(Callback[] callbacks) throws IOException,
-                            UnsupportedCallbackException {
-                        for (Callback callback : callbacks) {
-                            if (callback instanceof NameCallback) {
-                                ((NameCallback) callback).setName(auth
-                                        .getUsername());
-                            } else if (callback instanceof PasswordCallback) {
-                                ((PasswordCallback) callback).setPassword(auth
-                                        .getPassword().toCharArray());
-                            }
-                        }
-                    }
-                };
-
                 try {
-                    LoginContext loginContext = new LoginContext(JAAS_MODULE, handler);
                     //will throw exception if login fail
-                    loginContext.login();
-                    Subject subject = loginContext.getSubject();
+                    AuthenticationResult result = getAccessTokenFromUserCredentials(
+                            auth.getUsername(), auth.getPassword());
+
+                    log.info("USERINFO " + result.getUserInfo().getUniqueId() + " " + result.getUserInfo().getDisplayableId() + " " + result.getUserInfo().getGivenName() + " " + result.getUserInfo().getFamilyName());
+                    
 
                     con = DBUtils.getConn();
                     User user = AuthDB.getUserByUID(con, auth.getUsername());
@@ -104,15 +89,8 @@ public class ExternalAuthUtil {
                         user.setUsername(auth.getUsername());
                         
                         //if it looks like name is returned default it 
-                        for(Principal p: subject.getPrincipals()){
-                            if(p.getName().contains(" ")){
-                                String[] name = p.getName().split(" ");
-                                if(name.length>1) {
-                                    user.setFirstNm(name[0]);
-                                    user.setLastNm(name[name.length-1]);
-                                }
-                            }
-                        }
+                        user.setFirstNm(result.getUserInfo().getGivenName());
+                        user.setLastNm(result.getUserInfo().getFamilyName());
                         
                         //set email
                         if(auth.getUsername().contains("@")){
@@ -137,7 +115,7 @@ public class ExternalAuthUtil {
                     AuthDB.updateLogin(con, user);
 
 
-                } catch (LoginException e) {
+                } catch (ServiceUnavailableException e) {
                     //auth failed return empty
                     log.error(e.toString(), e);
                     authToken = null;
@@ -150,5 +128,28 @@ public class ExternalAuthUtil {
         }
 
         return authToken;
+    }
+
+    private static AuthenticationResult getAccessTokenFromUserCredentials(
+            String username, String password) throws Exception {
+        AuthenticationContext context = null;
+        AuthenticationResult result = null;
+        ExecutorService service = null;
+        try {
+            service = Executors.newFixedThreadPool(1);
+            context = new AuthenticationContext(AUTHORITY, false, service);
+            Future<AuthenticationResult> future = context.acquireToken(
+                    "https://graph.windows.net", CLIENT_ID, username, password,
+                    null);
+            result = future.get();
+        } finally {
+            service.shutdown();
+        }
+
+        if (result == null) {
+            throw new ServiceUnavailableException(
+                    "authentication result was null");
+        }
+        return result;
     }
 }

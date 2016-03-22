@@ -15,10 +15,12 @@
  */
 package com.keybox.manage.util;
 
+import com.keybox.common.util.AppConfig;
 import org.apache.commons.dbcp.*;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Class to create a pooling data source object using commons DBCP
@@ -58,11 +60,20 @@ public class DSPool {
 
     private static PoolingDataSource registerDataSource() {
 
-
+        final boolean externalDbEnabled = StringUtils.isNotEmpty(AppConfig.getProperty("dbListenPort"));
+        final String DB_EXTERNAL_PORT = AppConfig.getProperty("dbListenPort");
+        String connectionURI = null;
+    
         // create a database connection
         String user = "keybox";
         String password = "filepwd 45WJLnwhpA47EepT162hrVnDn3vYRvJhpZi0sVdvN9Sdsf";
-        String connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES";
+
+
+        if(externalDbEnabled) {
+            connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=" + DB_EXTERNAL_PORT;
+        } else {
+            connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES";
+        }
 
         String validationQuery = "select 1";
 
