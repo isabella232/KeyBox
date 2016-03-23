@@ -22,6 +22,7 @@ import com.keybox.manage.util.DBUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -176,7 +177,7 @@ public class ProfileDB {
         Connection con = null;
         try {
             con = DBUtils.getConn();
-            PreparedStatement stmt = con.prepareStatement("insert into profiles (nm, descr) values (?,?)");
+            PreparedStatement stmt = con.prepareStatement("insert into profiles (nm, descr) values (?,?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, profile.getNm());
             stmt.setString(2, profile.getDescr());
             stmt.execute();

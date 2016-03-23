@@ -62,27 +62,34 @@ public class DSPool {
 
         final boolean externalDbEnabled = StringUtils.isNotEmpty(AppConfig.getProperty("dbListenPort"));
         final String DB_EXTERNAL_PORT = AppConfig.getProperty("dbListenPort");
+        final boolean mysqlDbEnabled = StringUtils.isNotEmpty(AppConfig.getProperty("mysqlHost"));
         String connectionURI = null;
+        String validationQuery = "select 1";
     
-        // create a database connection
         String user = "keybox";
         String password = "filepwd 45WJLnwhpA47EepT162hrVnDn3vYRvJhpZi0sVdvN9Sdsf";
 
+        if(mysqlDbEnabled) {
+            connectionURI = "jdbc:mysql://" + AppConfig.getProperty("mysqlHost") + ":" + AppConfig.getProperty("mysqlPort") + "/" + AppConfig.getProperty("mysqlDb") ;
+            user = AppConfig.getProperty("mysqlUser");
+            password = AppConfig.getProperty("mysqlPass");
 
-        if(externalDbEnabled) {
-            connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=" + DB_EXTERNAL_PORT;
         } else {
-            connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES";
+
+            // create a database connection
+
+            if(externalDbEnabled) {
+                connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=" + DB_EXTERNAL_PORT;
+            } else {
+                connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES";
+            }
+
+            try {
+                Class.forName("org.h2.Driver");
+            } catch (ClassNotFoundException ex) {
+                log.error(ex.toString(), ex);
+            }
         }
-
-        String validationQuery = "select 1";
-
-        try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException ex) {
-            log.error(ex.toString(), ex);
-        }
-
 
         GenericObjectPool connectionPool = new GenericObjectPool(null);
 

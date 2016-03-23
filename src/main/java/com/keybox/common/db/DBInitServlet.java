@@ -57,6 +57,7 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 
         String DB_EXT_USER = null;
         String DB_EXT_PASS = null;
+        String dbSchema = "PUBLIC";
 
 		Connection connection = null;
 		Statement statement = null;
@@ -67,12 +68,15 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
             DB_EXT_USER = AppConfig.getProperty("dbUserLogin").toUpperCase();
             DB_EXT_PASS = AppConfig.getProperty("dbUserPass");
         }
+        if (StringUtils.isNotEmpty(AppConfig.getProperty("mysqlDb"))) {
+            dbSchema = AppConfig.getProperty("mysqlDb");
+        }
         
 		try {
 			connection = DBUtils.getConn();
 			statement = connection.createStatement();
 
-			ResultSet rs = statement.executeQuery("select * from information_schema.tables where upper(table_name) = 'USERS' and table_schema='PUBLIC'");
+			ResultSet rs = statement.executeQuery("select * from information_schema.tables where upper(table_name) = 'USERS' and table_schema='" + dbSchema + "'");
 			if (rs == null || !rs.next()) {
 				resetSSHKey = true;
 				statement.executeUpdate("create table if not exists users (id INTEGER PRIMARY KEY AUTO_INCREMENT, first_nm varchar(200), last_nm varchar(200), email varchar(200), username varchar(200) not null, password varchar(200), auth_token varchar(800), enabled boolean not null default true, auth_type varchar(50) not null default '" + Auth.AUTH_BASIC+ "', user_type varchar(50) not null default '" + Auth.ADMINISTRATOR + "', salt varchar(800), otp_secret varchar(200))");
@@ -83,16 +87,16 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 				statement.executeUpdate("create table if not exists profiles (id INTEGER PRIMARY KEY AUTO_INCREMENT, nm varchar(200) not null, descr varchar(200) not null)");
 				statement.executeUpdate("create table if not exists system_map (profile_id INTEGER, system_id INTEGER, foreign key (profile_id) references profiles(id) on delete cascade , foreign key (system_id) references system(id) on delete cascade, primary key (profile_id, system_id))");
 				statement.executeUpdate("create table if not exists user_map (user_id INTEGER, profile_id INTEGER, foreign key (user_id) references users(id) on delete cascade, foreign key (profile_id) references profiles(id) on delete cascade, primary key (user_id, profile_id))");
-				statement.executeUpdate("create table if not exists application_key (id INTEGER PRIMARY KEY AUTO_INCREMENT, public_key varchar(50000) not null, private_key varchar(50000) not null, passphrase varchar(50000))");
+				statement.executeUpdate("create table if not exists application_key (id INTEGER PRIMARY KEY AUTO_INCREMENT, public_key varchar(20000) not null, private_key varchar(20000) not null, passphrase varchar(10000))");
 
 				statement.executeUpdate("create table if not exists status (id INTEGER, user_id INTEGER, status_cd varchar(200) not null default 'INITIAL', foreign key (id) references system(id) on delete cascade, foreign key (user_id) references users(id) on delete cascade, primary key(id, user_id))");
-				statement.executeUpdate("create table if not exists scripts (id INTEGER PRIMARY KEY AUTO_INCREMENT, user_id INTEGER, display_nm varchar(200) not null, script varchar(65000) not null, foreign key (user_id) references users(id) on delete cascade)");
+				statement.executeUpdate("create table if not exists scripts (id INTEGER PRIMARY KEY AUTO_INCREMENT, user_id INTEGER, display_nm varchar(200) not null, script varchar(60000) not null, foreign key (user_id) references users(id) on delete cascade)");
 
 
 				statement.executeUpdate("create table if not exists public_keys (id INTEGER PRIMARY KEY AUTO_INCREMENT, key_nm varchar(200) not null, type varchar(200), fingerprint varchar(10000), public_key varchar(10000), enabled boolean not null default true, create_dt timestamp not null default CURRENT_TIMESTAMP(),  user_id INTEGER, profile_id INTEGER, foreign key (profile_id) references profiles(id) on delete cascade, foreign key (user_id) references users(id) on delete cascade)");
 
 				statement.executeUpdate("create table if not exists session_log (id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id INTEGER, session_tm timestamp default CURRENT_TIMESTAMP, foreign key (user_id) references users(id) on delete cascade )");
-				statement.executeUpdate("create table if not exists terminal_log (session_id BIGINT, instance_id INTEGER, system_id INTEGER, output varchar(65000) not null, log_tm timestamp default CURRENT_TIMESTAMP, foreign key (session_id) references session_log(id) on delete cascade, foreign key (system_id) references system(id) on delete cascade)");
+				statement.executeUpdate("create table if not exists terminal_log (session_id BIGINT, instance_id INTEGER, system_id INTEGER, output varchar(60000) not null, log_tm timestamp default CURRENT_TIMESTAMP, foreign key (session_id) references session_log(id) on delete cascade, foreign key (system_id) references system(id) on delete cascade)");
 
                 //set up user for external connections to db
                 if(dbUserEnabled) {
