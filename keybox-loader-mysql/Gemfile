@@ -1,0 +1,11 @@
+#  Find the JRuby version from .ruby-version to keep compatibility
+# with tools that exclusively use .ruby-version.
+LOOKER_JRUBY_VERSION = File.read(File.join(File.dirname(__FILE__), '.ruby-version')).split('-').last.chomp
+
+ruby '1.9.3', engine: 'jruby', engine_version: LOOKER_JRUBY_VERSION
+
+source "https://rubygems.org"
+
+
+gem 'sequel',           '4.2.0'
+gem 'jdbc-mysql',  '5.1.37'

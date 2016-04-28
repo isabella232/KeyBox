@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    jdbc-mysql (5.1.37)
+    sequel (4.2.0)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  jdbc-mysql (= 5.1.37)
+  sequel (= 4.2.0)
+
+BUNDLED WITH
+   1.10.0
