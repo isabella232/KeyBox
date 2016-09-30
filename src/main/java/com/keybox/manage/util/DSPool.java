@@ -17,6 +17,7 @@ package com.keybox.manage.util;
 
 import com.keybox.common.util.AppConfig;
 import org.apache.commons.dbcp.*;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,9 @@ public class DSPool {
 
         if(mysqlDbEnabled) {
             connectionURI = "jdbc:mysql://" + AppConfig.getProperty("mysqlHost") + ":" + AppConfig.getProperty("mysqlPort") + "/" + AppConfig.getProperty("mysqlDb") ;
+            if (BooleanUtils.toBoolean(AppConfig.getProperty("mysqlDisableSSL"))) {
+                connectionURI = connectionURI + "?useSSL=false";
+            }
             user = AppConfig.getProperty("mysqlUser");
             password = AppConfig.getProperty("mysqlPass");
 

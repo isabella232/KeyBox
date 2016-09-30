@@ -21,7 +21,7 @@
   		<dependency>
 			<groupId>com.microsoft.azure</groupId>
 			<artifactId>adal4j</artifactId>
-			<version>1.1.1</version>
+			<version>1.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nimbusds</groupId>
@@ -33,6 +33,28 @@
 			<artifactId>json</artifactId>
 			<version>20090211</version>
 		</dependency>
+        <!-- Spring Security Depends -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>4.1.3.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>4.1.3.RELEASE</version>
+        </dependency>
+        <!-- SAML Depends -->
+        <dependency>
+            <groupId>org.springframework.security.extensions</groupId>
+            <artifactId>spring-security-saml2-core</artifactId>
+            <version>1.0.2.RELEASE</version>
+        </dependency>
         <!-- Google Auth depends -->
         <dependency>
           <groupId>com.google.api-client</groupId>

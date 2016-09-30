@@ -1,4 +1,5 @@
 *.class
+*.jks
 
 # Package Files #
 *.jar

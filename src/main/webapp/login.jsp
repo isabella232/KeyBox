@@ -21,27 +21,15 @@
 <head>
     <jsp:include page="_res/inc/header.jsp"/>
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="<s:property value='client'/>" />
     <script type="text/javascript">
-      function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        var oauth_token = document.getElementById("oauth_token");
-        var oauth_username = document.getElementById("auth_username");
-        document.getElementById("auth_password").disabled = true;
-        oauth_token.value = googleUser.getAuthResponse().id_token;
-        oauth_username.value = profile.getEmail();
-        oauth_username.readOnly = true;
-      }
-    </script>
-    <script type="text/javascript">
+
         //break if loaded in frame
         if(top != self) top.location.replace(location);
 
         $(document).ready(function() {
 
             $("#login_btn").button().click(function() {
-                $('#loginSubmit').submit();
+                window.location = "/saml/login";
             });
         });
 		
@@ -63,36 +51,10 @@
 
     <div class="container">
         <p>
-        <s:actionerror/>
-        <s:form action="loginSubmit"  autocomplete="off">
-            <s:textfield name="auth.username" id="auth_username" label="Username" value="" />
-            <s:password name="auth.password" id="auth_password" label="Password" value="" />
-            <s:if test="otpEnabled">
-                <s:textfield name="auth.otpToken" label="OTP Access Code"  autocomplete="off" value=""/>
-            </s:if>
-            <s:hidden name="auth.oauthToken" id="oauth_token" value="" />
-            <tr> <td>&nbsp;</td>
-                <td align="left"> <div class="g-signin2" id="oauth_btn" data-onsuccess="onSignIn"></div></td>
-                <td align="right">  <div id="login_btn" class="btn btn-default login" >Login</div></td>
+            <tr>
+                <td align="right">  <div id="login_btn" class="btn btn-default login" >SAML Login</div></td>
             </tr>
-        </s:form>
         </p>
     </div>
-
-    <a href="#" onclick="signOut();">Google Sign out</a>
-    <script>
-      function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          console.log('User signed out.');
-          var oauth_token = document.getElementById("oauth_token");
-          var oauth_username = document.getElementById("auth_username");
-          document.getElementById("auth_password").disabled = false;
-          oauth_token.value = "";
-          oauth_username.value = "";
-          oauth_username.readOnly = false;
-        });
-      }
-    </script>
 </body>
 </html>
