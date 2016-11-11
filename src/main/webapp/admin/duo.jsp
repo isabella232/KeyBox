@@ -19,20 +19,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <jsp:include page="_res/inc/header.jsp"/>
+    <jsp:include page="../_res/inc/header.jsp"/>
 
+    <script src="../_res/js/Duo-Web-v2.min.js"></script>
     <script type="text/javascript">
 
         //break if loaded in frame
         if(top != self) top.location.replace(location);
 
         $(document).ready(function() {
-
-            $("#login_btn").button().click(function() {
-                window.location = "/saml/login";
+            Duo.init({
+                'host': '<s:property value='duoAPIEndpoint'/>',
+                'sig_request': '<s:property value='signedRequest'/>',
+                'post_action': '/admin/duoSubmit.action',
+                'post_argument': 'signedResponse'
             });
         });
-		
+
     </script>
     <title>KeyBox - Login </title>
 </head>
@@ -44,7 +47,6 @@
                 <div class="navbar-brand" >
                     <div class="nav-img"><img src="<%= request.getContextPath() %>/img/keybox_40x40.png" alt="keybox"/></div>
                     <a href="<%= request.getContextPath() %>/admin/menu.action">KeyBox</a>
-                    <div id="login_btn" class="btn btn-default login" >Login with the Lookery</div>
                 </div>
             </div>
             <!--/.nav-collapse -->
@@ -52,7 +54,21 @@
     </div>
 
     <div class="container">
-
+        <p>
+            <style>
+                #duo_iframe {
+                    width: 100%;
+                    min-width: 304px;
+                    max-width: 620px;
+                    height: 330px;
+                    border: none;
+                }
+            </style>
+            <iframe id="duo_iframe"></iframe>
+        </p>
+        <s:form method="POST" id="duo_form">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </s:form>
     </div>
 </body>
 </html>

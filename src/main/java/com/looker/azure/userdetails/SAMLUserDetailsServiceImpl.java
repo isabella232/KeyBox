@@ -6,13 +6,13 @@ import com.keybox.manage.db.UserDB;
 import com.keybox.manage.db.UserProfileDB;
 import com.keybox.manage.model.Auth;
 import com.keybox.manage.model.Profile;
+import com.keybox.manage.model.User;
 import com.keybox.manage.util.DBUtils;
 import com.looker.azure.util.SAMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
@@ -45,10 +45,12 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
         GrantedAuthority authority;
 
         String authToken;
+        User user = null;
+
         Connection con = null;
         try {
             con = DBUtils.getConn();
-            com.keybox.manage.model.User user = AuthDB.getUserByUID(con, userEmail);
+            user = AuthDB.getUserByUID(con, userEmail);
 
             // user doesn't exist, create in db
             if (user == null) {
@@ -91,13 +93,21 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
             //set auth token
             AuthDB.updateLogin(con, user);
 
+            user.setAuthorities(authorities);
+
         } catch (Exception e) {
             LOG.error(e.toString(), e);
         }
 
         DBUtils.closeConn(con);
 
-        return new User(userEmail, "<abc123>", true, true, true, true, authorities);
+        // if user is still null, create a user with no authorities, basically as a place holder
+        if (user == null) {
+            user = new User("failedloginuser", "<notused1234>", false, false, false, false, new ArrayList<GrantedAuthority>());
+            LOG.warn("Failed to login user (" + userEmail + "). See above error for more info");
+        }
+
+        return user;
     }
 
 }

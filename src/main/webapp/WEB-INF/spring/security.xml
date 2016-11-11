@@ -15,6 +15,7 @@
 
     <!-- Scan for auto-wiring classes in spring saml packages -->
     <context:component-scan base-package="org.springframework.security.saml"/>
+    <context:component-scan base-package="com.looker"/>
 
     <!-- Unsecured pages -->
     <security:http security="none" pattern="/favicon.ico"/>
@@ -54,7 +55,7 @@
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/admin/menu.action"/>
+        <property name="defaultTargetUrl" value="/admin/duo.action"/>
     </bean>
     <!--
     Use the following for interpreting RelayState coming from unsolicited response as redirect URL:

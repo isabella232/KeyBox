@@ -141,10 +141,10 @@
                         </td>
                         <td>
                          <s:if test="userType==\"A\"">
-                            Administrative Only
+                            User
                          </s:if>
                          <s:else>
-                            Full Access
+                             Admin
                          </s:else>
                         </td>
                         <s:if test="%{@com.keybox.manage.util.ExternalAuthUtil@externalAuthEnabled}">
@@ -194,7 +194,7 @@
                             <s:actionerror/>
                             <s:form action="saveUser" class="save_user_form_add" autocomplete="off">
                                 <s:textfield name="user.username" label="Username" size="15"/>
-                                <s:select name="user.userType" list="#{'A':'Administrative Only','M':'Full Access'}" label="UserType"/>
+                                <s:select name="user.userType" list="#{'A':'User','M':'Admin'}" label="UserType"/>
                                 <s:if test="%{@com.keybox.manage.util.ExternalAuthUtil@externalAuthEnabled}">
                                     <s:radio name="user.authType" label="Authentication Type" list="#{'BASIC':'Basic', 'EXTERNAL':'External'}" cssClass="auth_type"/>
                                 </s:if>
@@ -231,7 +231,7 @@
                                     <s:actionerror/>
                                     <s:form action="saveUser" id="save_user_form_edit_%{id}" autocomplete="off">
                                         <s:textfield name="user.username" value="%{username}" label="Username" size="15"/>
-                                        <s:select name="user.userType" value="%{userType}" list="#{'A':'Administrative Only','M':'Full Access'}" label="UserType"/>
+                                        <s:select name="user.userType" value="%{userType}" list="#{'A':'User','M':'Admin'}" label="UserType"/>
                                         <s:if test="%{@com.keybox.manage.util.ExternalAuthUtil@externalAuthEnabled}">
                                             <s:hidden name="user.authType" value="%{authType}"/>
                                             <tr>
