@@ -81,6 +81,7 @@
     <div class="container">
 
        <s:form action="viewProfileUsers">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:hidden name="sortedSet.orderByDirection"/>
             <s:hidden name="sortedSet.orderByField"/>
             <s:hidden name="profile.id"/>
@@ -96,6 +97,7 @@
 
         <s:if test="sortedSet.itemList!= null && !sortedSet.itemList.isEmpty()">
             <s:form action="assignUsersToProfile" theme="simple">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <s:hidden name="profile.id"/>
 
            <div class="scrollWrapper">

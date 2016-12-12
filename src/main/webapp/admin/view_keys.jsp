@@ -126,6 +126,7 @@
 
 <div class="container">
     <s:form action="viewKeys">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <s:hidden name="sortedSet.orderByDirection"/>
         <s:hidden name="sortedSet.orderByField"/>
     </s:form>
@@ -237,6 +238,7 @@
                         <div class="row">
                             <s:actionerror/>
                             <s:form action="savePublicKey" class="save_public_key_form_add" autocomplete="off">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:textfield name="publicKey.keyNm" label="Key Name" size="15"/>
                                 <s:if test="%{#session.userType==\"M\"}">
                                     <s:select name="publicKey.profile.id" list="profileList" headerKey=""
@@ -296,6 +298,7 @@
                             <div class="row">
                                 <s:actionerror/>
                                 <s:form action="savePublicKey" id="save_public_key_form_edit_%{id}" autocomplete="off">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <s:hidden name="publicKey.id" value="%{id}"/>
                                     <s:textfield name="publicKey.keyNm" value="%{keyNm}" label="Key Name" size="15"/>
                                     <s:if test="%{#session.userType==\"M\"}">

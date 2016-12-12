@@ -93,6 +93,7 @@
 
 
         <s:form action="viewSystems">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:hidden name="sortedSet.orderByDirection"/>
             <s:hidden name="sortedSet.orderByField"/>
         </s:form>
@@ -181,6 +182,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <s:form action="saveSystem" class="save_sys_form_add">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:textfield name="hostSystem.displayNm" label="Display Name" size="10"/>
                                 <s:textfield name="hostSystem.user" label="System User" size="10"/>
                                 <s:textfield name="hostSystem.host" label="Host" size="18"/>
@@ -210,6 +212,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <s:form action="saveSystem" id="save_sys_form_edit_%{id}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <s:textfield name="hostSystem.displayNm" value="%{displayNm}" label="Display Name" size="10"/>
                                     <s:textfield name="hostSystem.user" value="%{user}" label="System User" size="10"/>
                                     <s:textfield name="hostSystem.host" value="%{host}" label="Host" size="18"/>
@@ -244,6 +247,7 @@
                         <div class="row">
                             <div class="error">Error: <s:property value="hostSystem.errorMsg"/></div>
                             <s:form id="password_frm" action="saveSystem">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:hidden name="hostSystem.id"/>
                                 <s:hidden name="hostSystem.displayNm"/>
                                 <s:hidden name="hostSystem.user"/>
@@ -278,6 +282,7 @@
                         <div class="row">
                             <div class="error">Error: <s:property value="hostSystem.errorMsg"/></div>
                             <s:form id="passphrase_frm" action="saveSystem">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:hidden name="hostSystem.id"/>
                                 <s:hidden name="hostSystem.displayNm"/>
                                 <s:hidden name="hostSystem.user"/>
@@ -310,6 +315,7 @@
                         <div class="row">
                             <div class="error">Error: <s:property value="hostSystem.errorMsg"/></div>
                             <s:form id="error_frm">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:hidden name="hostSystem.id"/>
                                 <s:hidden name="pendingSystem.id"/>
                             </s:form>

@@ -76,6 +76,7 @@
 
     <div class="container">
         <s:form action="viewProfiles">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:hidden name="sortedSet.orderByDirection"/>
             <s:hidden name="sortedSet.orderByField"/>
             <s:if test="script!=null">
@@ -140,6 +141,7 @@
                     </div>
                     <div class="modal-body">
                         <s:form action="saveProfile" class="save_profile_form_add">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <s:textfield name="profile.nm" label="Name" size="15"/>
                             <s:textarea name="profile.descr" label="Profile Description" rows="5" cols="25"/>
                             <s:hidden name="sortedSet.orderByDirection"/>
@@ -165,6 +167,7 @@
                         <div class="modal-body">
                             <div class="row">
                                 <s:form action="saveProfile" id="save_profile_form_edit_%{id}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <s:textfield name="profile.nm" value="%{nm}" label="Name" size="15"/>
                                     <s:textarea name="profile.descr" value="%{descr}" label="Profile Description" rows="5"
                                                 cols="25"/>

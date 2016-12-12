@@ -91,6 +91,7 @@
         <tr>
             <td class="align_left">
                 <s:form id="viewKeys" action="viewKeys" theme="simple">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <s:hidden name="sortedSet.orderByDirection"/>
                     <s:hidden name="sortedSet.orderByField"/>
 

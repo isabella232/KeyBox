@@ -44,9 +44,9 @@
 
 <s:if test="idList!= null && !idList.isEmpty()">
 <s:form action="upload" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <s:file name="upload" label="File"/>
     <s:textfield name="pushDir" label="Destination Directory"/>
-
     <tr>
         <td>&nbsp;</td>
         <td>

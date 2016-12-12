@@ -37,7 +37,7 @@
         }
     </style>
 
-    <title>KeyBox - Set Admin Password</title>
+    <title>KeyBox - Set User Settings</title>
 </head>
 <body>
 
@@ -52,6 +52,7 @@
 
         <s:actionerror/>
         <s:form action="passwordSubmit" autocomplete="off">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:password name="auth.prevPassword" label="Current Password" />
             <s:password name="auth.password" label="New Password" />
             <s:password name="auth.passwordConfirm" label="Confirm New Password" />
@@ -67,6 +68,7 @@
 
         <p>Change the theme for your terminals below</p>
         <s:form action="themeSubmit">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
             <s:select name="userSettings.theme"
                       list="#{'#2e3436,#cc0000,#4e9a06,#c4a000,#3465a4,#75507b,#06989a,#d3d7cf,#555753,#ef2929,#8ae234,#fce94f,#729fcf,#ad7fa8,#34e2e2,#eeeeec':'Tango',
@@ -76,6 +78,7 @@
             <s:select name="userSettings.plane"
                       list="#{'#FFFFDD,#000000':'Black on light yellow',
                               '#FFFFFF,#000000':'Black on white',
+                              '#0EC6FF,#FFFFFF':'Blue on black',
                               '#000000,#AAAAAA':'Gray on black',
                               '#000000,#00FF00':'Green on black',
                               '#000000,#FFFFFF':'White on black'

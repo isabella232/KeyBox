@@ -94,6 +94,7 @@
 
     <div class="container">
         <s:form action="viewUsers">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:hidden name="sortedSet.orderByDirection" />
             <s:hidden name="sortedSet.orderByField"/>
         </s:form>
@@ -193,6 +194,7 @@
                         <div class="row">
                             <s:actionerror/>
                             <s:form action="saveUser" class="save_user_form_add" autocomplete="off">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <s:textfield name="user.username" label="Username" size="15"/>
                                 <s:select name="user.userType" list="#{'A':'User','M':'Admin'}" label="UserType"/>
                                 <s:if test="%{@com.keybox.manage.util.ExternalAuthUtil@externalAuthEnabled}">
@@ -230,6 +232,7 @@
                                 <div class="row">
                                     <s:actionerror/>
                                     <s:form action="saveUser" id="save_user_form_edit_%{id}" autocomplete="off">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <s:textfield name="user.username" value="%{username}" label="Username" size="15"/>
                                         <s:select name="user.userType" value="%{userType}" list="#{'A':'User','M':'Admin'}" label="UserType"/>
                                         <s:if test="%{@com.keybox.manage.util.ExternalAuthUtil@externalAuthEnabled}">

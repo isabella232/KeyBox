@@ -166,6 +166,7 @@ $(document).ready(function() {
 
                 <div class="align-right">
                     <s:form id="filter_frm" theme="simple">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <s:label value=""/>
                         <s:textfield name="filter" type="text" class="spacer spacer-left"/><div class="btn btn-default submit_btn spacer spacer-middle">Filter</div><div class="btn btn-default clear_btn spacer spacer-right">Clear</div>
                     </s:form>

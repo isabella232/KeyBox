@@ -111,6 +111,7 @@
                         <button onclick="window.location = 'menu.action'" class="btn btn-danger spacer spacer-left" style="float:left">Skip for Now</button>
                     </s:if>
                     <s:form action="otpSubmit" theme="simple" >
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <s:hidden name="sharedSecret"/>
                         <s:submit cssClass="btn btn-default spacer spacer-right" value="Got It!"/>
                     </s:form>

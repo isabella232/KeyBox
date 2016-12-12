@@ -99,6 +99,7 @@
             </s:else>
 
         <s:form id="viewSystems" action="viewSystems" theme="simple">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <s:hidden name="sortedSet.orderByDirection"/>
         <s:hidden name="sortedSet.orderByField"/>
         <s:if test="script!=null">
@@ -126,6 +127,7 @@
         <s:if test="sortedSet.itemList!= null && !sortedSet.itemList.isEmpty()">
 
   	        <s:form action="selectSystemsForCompositeTerms" id="select_frm" theme="simple">
+                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
   	             <s:if test="script!=null">
                         <s:hidden name="script.id"/>
                  </s:if>
