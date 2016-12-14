@@ -78,7 +78,7 @@
             <s:select name="userSettings.plane"
                       list="#{'#FFFFDD,#000000':'Black on light yellow',
                               '#FFFFFF,#000000':'Black on white',
-                              '#0EC6FF,#FFFFFF':'Blue on black',
+                              '#000000,#0EC6FF':'Blue on black',
                               '#000000,#AAAAAA':'Gray on black',
                               '#000000,#00FF00':'Green on black',
                               '#000000,#FFFFFF':'White on black'
