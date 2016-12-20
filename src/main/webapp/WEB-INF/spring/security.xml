@@ -209,8 +209,9 @@
     </bean>
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
+    <!-- Setting to 60 days so no more failures on long logins-->
     <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-        <property name="maxAuthenticationAge" value="604800"/>
+        <property name="maxAuthenticationAge" value="5184000"/>
     </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->

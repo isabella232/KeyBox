@@ -10,6 +10,16 @@
         </layout>
     </appender>
 
+    <appender name="file" class="org.apache.log4j.RollingFileAppender">
+        <param name="append" value="false" />
+        <param name="maxFileSize" value="100MB" />
+        <param name="maxBackupIndex" value="10" />
+        <param name="file" value="${jetty.base}/logs/jettyServer.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n" />
+        </layout>
+    </appender>
+
     <!-- System audit example using logstash
     <appender name="logstash-socket-appender" class="org.apache.log4j.net.SocketAppender">
         <param name="RemoteHost" value="127.0.0.1"/>
@@ -49,8 +59,9 @@
     </logger>
 
     <root>
-        <level value="warn"/>
+        <level value="info"/>
         <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </root>
 
 </log4j:configuration>
