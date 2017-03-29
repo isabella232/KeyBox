@@ -57,6 +57,8 @@ public class SSHUtil {
 	public static final int SESSION_TIMEOUT = 60000;
 	public static final int CHANNEL_TIMEOUT = 60000;
 
+	public static final String SSH_PROXY_COMMAND = AppConfig.getProperty("sshProxyCommand");
+
 	/**
 	 * returns the system's public key
 	 *
@@ -459,6 +461,12 @@ public class SSHUtil {
 				session.setPassword(password);
 			}
 			session.setConfig("StrictHostKeyChecking", "no");
+
+			if (!SSH_PROXY_COMMAND.isEmpty()) {
+				ProxyCommand proxyCommand = new ProxyCommand(SSH_PROXY_COMMAND);
+				session.setProxy(proxyCommand);
+			}
+
 			session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);
 			session.connect(SESSION_TIMEOUT);
 			Channel channel = session.openChannel("shell");
