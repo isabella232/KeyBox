@@ -54,7 +54,7 @@ public class SystemDB {
 	public static SortedSet getUserSystemSet(SortedSet sortedSet, Long userId) {
 		List<HostSystem> hostSystemList = new ArrayList<HostSystem>();
 
-		String orderBy = "";
+		String orderBy = "order by " + SystemDB.SORT_BY_NAME;
 		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
 			orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
 		}
@@ -111,7 +111,7 @@ public class SystemDB {
 	public static SortedSet getSystemSet(SortedSet sortedSet) {
 		List<HostSystem> hostSystemList = new ArrayList<HostSystem>();
 
-		String orderBy = "";
+		String orderBy = "order by " + SystemDB.SORT_BY_NAME;
 		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
 			orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
 		}

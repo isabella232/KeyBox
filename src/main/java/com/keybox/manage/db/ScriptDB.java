@@ -48,7 +48,7 @@ public class ScriptDB {
         ArrayList<Script> scriptList = new ArrayList<Script>();
 
 
-        String orderBy = "";
+        String orderBy = "order by " + ScriptDB.SORT_BY_DISPLAY_NM;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }
