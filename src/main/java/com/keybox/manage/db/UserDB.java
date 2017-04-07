@@ -54,7 +54,7 @@ public class UserDB {
         ArrayList<User> userList = new ArrayList<User>();
 
 
-        String orderBy = "";
+        String orderBy = "order by " + UserDB.SORT_BY_USERNAME;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }
@@ -100,7 +100,7 @@ public class UserDB {
         ArrayList<User> userList = new ArrayList<User>();
 
 
-        String orderBy = "";
+        String orderBy = "order by " + UserDB.SORT_BY_USERNAME;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }

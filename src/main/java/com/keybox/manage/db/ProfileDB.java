@@ -46,7 +46,7 @@ public class ProfileDB {
 
         ArrayList<Profile> profileList = new ArrayList<Profile>();
 
-        String orderBy = "";
+        String orderBy = "order by " + ProfileDB.SORT_BY_PROFILE_NM;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }

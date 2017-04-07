@@ -179,7 +179,7 @@ public class PublicKeyDB {
         ArrayList<PublicKey> publicKeysList = new ArrayList<PublicKey>();
 
 
-        String orderBy = "";
+        String orderBy = " order by " + PublicKeyDB.SORT_BY_USERNAME;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = " order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }
@@ -246,7 +246,7 @@ public class PublicKeyDB {
         ArrayList<PublicKey> publicKeysList = new ArrayList<PublicKey>();
 
 
-        String orderBy = "";
+        String orderBy = "order by " + PublicKeyDB.SORT_BY_USERNAME;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }

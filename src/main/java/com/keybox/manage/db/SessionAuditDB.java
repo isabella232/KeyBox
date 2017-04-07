@@ -96,7 +96,7 @@ public class SessionAuditDB {
         Connection con = null;
         List<SessionAudit> outputList = new LinkedList<SessionAudit>();
 
-        String orderBy = "";
+        String orderBy = " order by " + SessionAuditDB.SORT_BY_SESSION_TM;
         if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
             orderBy = " order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
         }

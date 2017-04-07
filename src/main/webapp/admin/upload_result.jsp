@@ -69,7 +69,7 @@
 <body style="background: #FFFFFF">
 
 <h4>
-    Pushing File: <s:property value="uploadFileName"/>
+    Pushing File: <s:property value="uploadFileName"/> to all instances below. Please be patient
 </h4>
 
 
@@ -101,7 +101,7 @@
 
                 <td>
                    <s:if test="statusCd=='INITIAL'">
-                    <div class="warning">Not Started</div>
+                    <div class="warning">Transferring</div>
                    </s:if>
                    <s:elseif test="statusCd=='AUTHFAIL'">
                     <div class="warning">Authentication Failed</div>
