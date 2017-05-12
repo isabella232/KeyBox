@@ -166,7 +166,7 @@ Steps:
 3. Assign systems to profile
 4. Assign profiles to users
 5. Users can login to create sessions on assigned systems
-6. Start a composite SSH session or create and execute a script across multiple sessions
+6. Start a SSH session or create and execute a script across multiple sessions
 7. Add additional public keys to systems
 8. Disable any administrative public key forcing key rotation.
 9. Audit session history

@@ -209,6 +209,7 @@ public class AuthKeysAction extends ActionSupport implements ServletRequestAware
 				servletResponse.getOutputStream().close();
 			} catch (Exception ex) {
                 log.error(ex.toString(), ex);
+				addActionError("Exception occurred during download of private key: " + ex.getMessage());
 			}
 		}
 		//remove pvt key

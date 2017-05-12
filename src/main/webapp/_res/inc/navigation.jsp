@@ -69,8 +69,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Secure Shell <b class="caret"></b></a>
                     <ul class="dropdown-menu">
 
-                        <li><a href="../admin/viewSystems.action">Composite SSH Terms</a></li>
-                        <li><a href="../admin/viewScripts.action">Composite Scripts</a></li>
+                        <li><a href="../admin/viewSystems.action">SSH Terminals</a></li>
+                        <li><a href="../admin/viewScripts.action">Scripts</a></li>
 
 
                     </ul>

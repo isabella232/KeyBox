@@ -232,6 +232,13 @@ public class SSHUtil {
 			if (password != null && !password.equals("")) {
 				session.setPassword(password);
 			}
+
+			// use proxy for checking connection for local
+			if (!SSH_PROXY_COMMAND.isEmpty()) {
+				ProxyCommand proxyCommand = new ProxyCommand(SSH_PROXY_COMMAND);
+				session.setProxy(proxyCommand);
+			}
+
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);
 			session.connect(SESSION_TIMEOUT);
@@ -318,6 +325,58 @@ public class SSHUtil {
 
 	}
 
+	/**
+	 * downloads item from system defined
+	 *
+	 * @param hostSystem  object contains host system information
+	 * @param session     an established SSH session
+	 * @param source      source file
+	 * @param destination destination file
+	 * @return status uploaded file
+	 */
+	public static HostSystem pullDownload(HostSystem hostSystem, Session session, String source, String destination) {
+
+		hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
+		Channel channel = null;
+		ChannelSftp c = null;
+
+		try {
+			channel = session.openChannel("sftp");
+			channel.setInputStream(System.in);
+			channel.setOutputStream(System.out);
+			channel.connect(CHANNEL_TIMEOUT);
+
+			c = (ChannelSftp) channel;
+			source = source.replaceAll("~\\/|~", "");
+
+			// if file doesn't exist, then create it
+			File destFile = new File(destination);
+			if (!destFile.exists()) {
+				destFile.getParentFile().mkdirs();
+				destFile.createNewFile();
+			}
+			//get file output stream
+			FileOutputStream file = new FileOutputStream(destFile);
+			// TODO look into SftpProgressMonitor for progress
+			c.get(source, file);
+			file.close();
+
+		} catch (Exception e) {
+			log.info(e.toString(), e);
+			hostSystem.setErrorMsg(e.getMessage());
+			hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
+		}
+		//exit
+		if (c != null) {
+			c.exit();
+		}
+		//disconnect
+		if (channel != null) {
+			channel.disconnect();
+		}
+
+		return hostSystem;
+	}
 
 	/**
 	 * distributes authorized keys for host system
