@@ -27,6 +27,7 @@
 
 
             $("#upload_btn").button().click(function() {
+                $(this).replaceWith('<img src="../img/loading.gif" height="72" width="110"/>');
                 $('#upload').submit();
             });
         });
