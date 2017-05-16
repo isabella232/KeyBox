@@ -162,6 +162,7 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
 
         } catch (Exception e) {
             log.error(e.toString(), e);
+            addActionError("Exception occurred during push from keybox to host: " + e.getMessage());
         }
 
         return SUCCESS;

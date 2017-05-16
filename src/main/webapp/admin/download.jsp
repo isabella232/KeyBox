@@ -26,9 +26,9 @@
         $(document).ready(function() {
 
 
-            $("#upload_btn").button().click(function() {
+            $("#download_btn").button().click(function() {
                 $(this).replaceWith('<img src="../img/loading.gif" height="72" width="110"/>');
-                $('#upload').submit();
+                $('#pull').submit();
             });
         });
 
@@ -39,25 +39,24 @@
         }
     </style>
 
-    <title>KeyBox - Upload &amp; Push</title>
+    <title>KeyBox - Download File</title>
 </head>
 <body style="background: #FFFFFF">
 
 <s:if test="idList!= null && !idList.isEmpty()">
-<s:form action="upload" method="post" enctype="multipart/form-data">
+<s:form action="pull" method="post" enctype="multipart/form-data">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <s:file name="upload" label="File"/>
-    <s:textfield name="pushDir" label="Destination Directory"/>
+    <s:textfield name="pullFile" label="Full path of file to download from host"/>
     <tr>
         <td>&nbsp;</td>
         <td>
-            <div id="upload_btn" class="btn btn-default upload">Upload</div>
+            <div id="download_btn" class="btn btn-default download">Download</div>
         </td>
     </tr>
 </s:form>
 </s:if>
 <s:else>
-    <p class="error">No systems associated with upload</p>
+    <p class="error">No systems associated with download</p>
 </s:else>
 
 </body>

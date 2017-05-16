@@ -95,7 +95,7 @@
 
              <tr>
                 <td>
-                    <a href="../admin/viewSystems.action">Composite SSH Terms</a>
+                    <a href="../admin/viewSystems.action">SSH Terminals</a>
                 </td>
                 <td>
                 Execute multiple-simultaneous web-terminals on selected systems.
@@ -103,7 +103,7 @@
              </tr>
              <tr>
                 <td>
-                    <a href="../admin/viewScripts.action">Composite Scripts</a>
+                    <a href="../admin/viewScripts.action">Scripts</a>
                 </td>
                 <td>
                     Create scripts to be executed on selected systems simultaneously through a web-terminal.

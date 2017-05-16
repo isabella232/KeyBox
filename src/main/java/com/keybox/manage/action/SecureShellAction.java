@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This action will create composite ssh terminals to be used
+ * This action will create ssh terminals to be used
  */
 public class SecureShellAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
@@ -64,7 +64,7 @@ public class SecureShellAction extends ActionSupport implements ServletRequestAw
 
 
     /**
-     * creates composite terminals if there are errors or authentication issues.
+     * creates terminals if there are errors or authentication issues.
      */
     @Action(value = "/admin/createTerms",
             results = {
@@ -221,6 +221,7 @@ public class SecureShellAction extends ActionSupport implements ServletRequestAw
                     userSchSessions.getSchSessionMap().remove(id);
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);
+                    addActionError("Exception occurred during terminal disconnect: " + ex.getMessage());
                 }
             }
 
@@ -305,7 +306,7 @@ public class SecureShellAction extends ActionSupport implements ServletRequestAw
                         }
                     } catch (Exception e) {
                         log.error(e.toString(), e);
-
+                        addActionError("Exception occurred during set system list: " + e.getMessage());
                     }
                 }
             }

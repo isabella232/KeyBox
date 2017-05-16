@@ -94,8 +94,8 @@
                 </div>
             </s:if>
             <s:else>
-                <h3>Composite SSH Terminals</h3>
-                <p>Select the systems below to generate composite SSH sessions in multiple terminals</p>
+                <h3>SSH Terminals</h3>
+                <p>Select the systems below to generate SSH sessions in multiple terminals</p>
             </s:else>
 
         <s:form id="viewSystems" action="viewSystems" theme="simple">

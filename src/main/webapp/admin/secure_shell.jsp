@@ -42,6 +42,10 @@
                 $("#upload_push_frame").attr("src", "");
             });
 
+            $('#download_pull_dialog').on('hidden.bs.modal', function () {
+                $("#download_pull_frame").attr("src", "");
+            });
+
             $(".termwrapper").sortable({
                 connectWith: ".run_cmd",
                 handle: ".term-header",
@@ -102,6 +106,28 @@
 
                 $("#upload_push_frame").attr("src", "setUpload.action" + idListStr);
                 $("#upload_push_dialog").modal();
+
+
+            });
+
+            //upload frame dialog
+            $('#download_pull').click(function () {
+
+                var ids=[];
+                $(".run_cmd_active").each(function (index) {
+                    var id = $(this).find(".host").attr("data-hostId");
+                    if (ids.indexOf(id)==-1) {
+                        ids.push(id);
+                    }
+                });
+
+                var idListStr = '?action=download';
+                ids.forEach(function (entry) {
+                    idListStr = idListStr + '&idList=' + entry;
+                });
+
+                $("#download_pull_frame").attr("src", "setDownload.action" + idListStr);
+                $("#download_pull_dialog").modal();
 
 
             });
@@ -529,7 +555,7 @@
 
     </style>
 
-    <title>KeyBox - Composite Terms</title>
+    <title>KeyBox - SSH Terminals</title>
 
 </head>
 <body>
@@ -563,6 +589,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Terminal Actions<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a id="upload_push" href="#">Upload &amp; Push</a></li>
+                            <li><a id="download_pull" href="#">Download File</a></li>
                             <li><a id="connect_to_host" data-toggle="modal" data-target="#connect_to_host_dialog" href="#">Connect to Host</a></li>
                             <li><a id="dup_session" href="#">Duplicate Session</a></li>
                             <li><a id="reset_size" href="#">Reset Size</a></li>
@@ -609,7 +636,7 @@
         <jsp:include page="../_res/inc/navigation.jsp"/>
 
     <div class="container">
-        <h3>Composite SSH Terms</h3>
+        <h3>SSH Terminals</h3>
 
         <p class="error">No sessions could be created</p>
     </div>
@@ -734,6 +761,21 @@
                 </div>
                 <div class="modal-body">
                     <iframe id="upload_push_frame" width="675px" height="300px" style="border: none;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="download_pull_dialog" class="modal fade">
+        <div class="modal-dialog" style="width:700px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title">Download File</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe id="download_pull_frame" width="675px" height="300px" style="border: none;">
                     </iframe>
                 </div>
             </div>
