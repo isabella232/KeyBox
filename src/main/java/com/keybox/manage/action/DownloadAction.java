@@ -70,7 +70,8 @@ public class DownloadAction extends ActionSupport implements ServletRequestAware
     @Action(value = "/admin/pull",
             results = {
                     @Result(name = "input", location = "/admin/download.jsp"),
-                    @Result(name = "success", location = "/admin/download_result.jsp")
+                    @Result(name = "success", location = "/admin/download_result.jsp"),
+                    @Result(name = "error", location = "/admin/struts_error.jsp")
             }
     )
     public String pull() {
@@ -128,7 +129,7 @@ public class DownloadAction extends ActionSupport implements ServletRequestAware
                                     "inputName", "fileInputStream",
                                     "contentDisposition", "attachment;filename=${downloadFileName}" }
                     ),
-                    @Result(name = "error", location = "/admin/error.jsp")
+                    @Result(name = "error", location = "/admin/struts_error.jsp")
             }
     )
     public String download() {

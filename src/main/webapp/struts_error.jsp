@@ -1,5 +1,3 @@
-<%@ page import="org.springframework.security.web.WebAttributes" %>
-<%@ page import="org.springframework.security.authentication.CredentialsExpiredException" %>
 <%
 /**
 * Copyright 2013 Sean Kavanagh - sean.p.kavanagh6@gmail.com
@@ -43,25 +41,15 @@
 
 <div class="container">
     <h3>Error</h3>
-    <p>An exception has occurred. Hopefully more information is displayed below. If not, contact an admin and have them check the logs for errors</p>
+    <p>An exception occurred, see below info for more information, or ask an admin to check the logs.</p>
 
-        <% if (request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null && request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) instanceof Throwable){ %>
-            <% Throwable cause = (Throwable)request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-                while(cause.getCause() != null) {
-                    cause = cause.getCause();
-                }
-            %>
-
-            <% if (cause.getClass().equals(CredentialsExpiredException.class)){ %>
-                <div class="warning">You SSO credentials have expired, please reset your session by going <a target="_blank" href="https://login.microsoftonline.com/">here</a> and logging in</div>
-                <div class="warning">Once you have done that, click <a href="<%= request.getContextPath() %>/admin/menu.action">here</a> to try again.</div>
-            <% } else { %>
-                <div class="error"><%= cause.getClass() %></div>
-                <div class="error"><%= cause.getMessage() %></div>
-            <% } %>
-
-        <% } %>
-
+     <%--hasActionErrors() method is defined in ActionSupport --%>
+    <s:if test="hasActionErrors()">
+        <s:actionerror/>
+    </s:if>
+    <s:if test="hasActionMessages()">
+        <s:actionmessage/>
+    </s:if>
 </div>
 
 </body>

@@ -25,6 +25,12 @@
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/_res/css/jquery-ui/jquery-ui.css"/>
 
     <script type="text/javascript">
+
+        <%--Custom messages don't work anymore, so you may or may not see this text on unload--%>
+        $(window).on("beforeunload", function() {
+            return "Are you sure you want to leave?";
+        });
+
         $(document).ready(function () {
 
             //get instance id list from selected terminals

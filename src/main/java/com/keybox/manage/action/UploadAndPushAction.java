@@ -99,7 +99,8 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
 
     @Action(value = "/admin/push",
             results = {
-                    @Result(name = "success", location = "/admin/upload_result.jsp")
+                    @Result(name = "success", location = "/admin/upload_result.jsp"),
+                    @Result(name = "error", location = "/admin/struts_error.jsp")
             }
     )
     public String push() {
@@ -163,6 +164,7 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
         } catch (Exception e) {
             log.error(e.toString(), e);
             addActionError("Exception occurred during push from keybox to host: " + e.getMessage());
+            return ERROR;
         }
 
         return SUCCESS;
