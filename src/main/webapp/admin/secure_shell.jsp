@@ -26,7 +26,7 @@
 
     <script type="text/javascript">
 
-        <%--Custom messages don;t work anymore, so you may or may not see this text on unload--%>
+        <%--Custom messages don't work anymore, so you may or may not see this text on unload--%>
         $(window).on("beforeunload", function() {
             return "Are you sure you want to leave?";
         });
