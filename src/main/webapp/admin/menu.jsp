@@ -147,7 +147,11 @@
             </tr>
             </tbody>
         </table>
-    </div>
         </div>
+
+        <div>
+            <p>Current known shortcomings of keybox are listed in this <a target="_blank" href="https://dig.looker.com/t/keybox-checklist/2556">dig article</a></p>
+        </div>
+    </div>
 </body>
 </html>

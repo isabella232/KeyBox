@@ -45,7 +45,7 @@ public class DUOAction extends ActionSupport implements ServletRequestAware, Ser
     @Action(value = "/admin/duo",
             results = {
                     @Result(name = "success", location = "/admin/duo.jsp"),
-                    @Result(name = "error", location = "/login.action", type = "redirect")
+                    @Result(name = "login", location = "/login.action", type = "redirect")
             }
     )
     public String duo() {
@@ -63,7 +63,8 @@ public class DUOAction extends ActionSupport implements ServletRequestAware, Ser
             duoAPIEndpoint = AppConfig.getProperty("duoAPIEndpoint");
         }
         else {
-            return "error";
+            log.warn("No session found, redirecting back to login");
+            return LOGIN;
         }
         
         return SUCCESS;
@@ -73,7 +74,7 @@ public class DUOAction extends ActionSupport implements ServletRequestAware, Ser
     @Action(value = "/admin/duoSubmit",
             results = {
                     @Result(name = "success", location = "/admin/menu.action", type = "redirect"),
-                    @Result(name = "failed", location = "/login.action", type = "redirect")
+                    @Result(name = "login", location = "/login.action", type = "redirect")
             }
     )
     public String duoSubmit() {
@@ -105,7 +106,7 @@ public class DUOAction extends ActionSupport implements ServletRequestAware, Ser
             }
         } catch (Exception ex) {
             log.error("Failed because of: " + ex.getMessage());
-            return "failed";
+            return LOGIN;
         }
 
         return SUCCESS;
