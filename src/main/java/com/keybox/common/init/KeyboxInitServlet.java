@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.keybox.common.db;
+package com.keybox.common.init;
 
 import com.keybox.common.util.AppConfig;
 import com.keybox.manage.model.Auth;
-import com.keybox.manage.model.SessionOutput;
 import com.keybox.manage.util.DBUtils;
 import com.keybox.manage.util.EncryptionUtil;
 import com.keybox.manage.util.RefreshAuthKeyUtil;
@@ -26,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,12 +37,15 @@ import org.slf4j.LoggerFactory;
  * Initial startup task.  Creates an SQLite DB and generates
  * the system public/private key pair if none exists
  */
-public class DBInitServlet extends javax.servlet.http.HttpServlet {
+public class KeyboxInitServlet extends javax.servlet.http.HttpServlet {
 
-    private static Logger log = LoggerFactory.getLogger(DBInitServlet.class);
+    private static Logger log = LoggerFactory.getLogger(KeyboxInitServlet.class);
 
 	/**
-	 * task init method that created DB and generated public/private keys
+	 * task init method that
+	 *  checks storage directory
+	 *  checks DB and creates if necessary
+	 *  generates public/private keys
 	 *
 	 * @param config task config
 	 * @throws ServletException
@@ -51,6 +53,24 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 
 		super.init(config);
+
+		log.info("Storage path:" + SSHUtil.STORAGE_PATH);
+		File storageDirectory = new File(SSHUtil.STORAGE_PATH);
+		if (!storageDirectory.isDirectory()) {
+			throw new ServletException("Storage path (" + SSHUtil.STORAGE_PATH + ") doesn't exist");
+		}
+		log.info("Upload path:" + SSHUtil.UPLOAD_PATH);
+		File uploadDirectory = new File(SSHUtil.UPLOAD_PATH);
+		if (!uploadDirectory.isDirectory()) {
+			//make directory
+			uploadDirectory.mkdir();
+		}
+		log.info("Download path:" + SSHUtil.DOWNLOAD_PATH);
+		File downloadDirectory = new File(SSHUtil.DOWNLOAD_PATH);
+		if (!downloadDirectory.isDirectory()) {
+			//make directory
+			downloadDirectory.mkdir();
+		}
 
         String DB_EXT_USER = null;
         String DB_EXT_PASS = null;
@@ -160,6 +180,7 @@ public class DBInitServlet extends javax.servlet.http.HttpServlet {
 
 		} catch (Exception ex) {
             log.error(ex.toString(), ex);
+			throw new ServletException("Error initializing db", ex);
 		}
 
 		DBUtils.closeStmt(statement);

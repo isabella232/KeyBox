@@ -50,9 +50,6 @@ public class DownloadAction extends ActionSupport implements ServletRequestAware
     HttpServletResponse servletResponse;
     FileInputStream fileInputStream = null;
 
-    public static final String DOWNLOAD_PATH = DBUtils.class.getClassLoader().getResource(".").getPath() + "../download";
-
-
     @Action(value = "/admin/setDownload",
             results = {
                     @Result(name = "success", location = "/admin/download.jsp")
@@ -252,7 +249,7 @@ public class DownloadAction extends ActionSupport implements ServletRequestAware
 
     // builds up the full download path, for the given user
     private static String buildFilePath(String filenameWithSystem, long userId) {
-        return DOWNLOAD_PATH + "/" + filenameWithSystem + "_" + userId;
+        return SSHUtil.DOWNLOAD_PATH + "/" + filenameWithSystem + "_" + userId;
     }
 
     private static String cleanDownloadFilename(String pullPath, long systemId) {

@@ -39,12 +39,12 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>dbInitServlet</servlet-name>
-        <servlet-class>com.keybox.common.db.DBInitServlet</servlet-class>
+        <servlet-name>keyboxInitServlet</servlet-name>
+        <servlet-class>com.keybox.common.init.KeyboxInitServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>dbInitServlet</servlet-name>
+        <servlet-name>keyboxInitServlet</servlet-name>
         <url-pattern>/config</url-pattern>
     </servlet-mapping>
 

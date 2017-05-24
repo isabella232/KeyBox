@@ -53,8 +53,6 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
     HostSystem currentSystemStatus;
     HttpServletRequest servletRequest;
 
-    public static final String UPLOAD_PATH = DBUtils.class.getClassLoader().getResource(".").getPath() + "../upload";
-
 
     @Action(value = "/admin/setUpload",
             results = {
@@ -80,7 +78,7 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
 
         Long userId= AuthUtil.getUserId(servletRequest.getSession());
         try {
-            File destination = new File(UPLOAD_PATH, uploadFileName);
+            File destination = new File(SSHUtil.UPLOAD_PATH, uploadFileName);
             FileUtils.copyFile(upload, destination);
 
             pendingSystemStatus = SystemStatusDB.getNextPendingSystem(userId);
@@ -125,7 +123,7 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
                 if(session!=null) {
 
                     //push upload to system
-                    currentSystemStatus = SSHUtil.pushUpload(pendingSystemStatus, session.getSession(), UPLOAD_PATH + "/" + uploadFileName, pushDir + "/" + uploadFileName);
+                    currentSystemStatus = SSHUtil.pushUpload(pendingSystemStatus, session.getSession(), SSHUtil.UPLOAD_PATH + "/" + uploadFileName, pushDir + "/" + uploadFileName);
 
                     //update system status
                     SystemStatusDB.updateSystemStatus(currentSystemStatus, userId);
@@ -137,12 +135,12 @@ public class UploadAndPushAction extends ActionSupport implements ServletRequest
 
             //if push has finished to all servers then delete uploaded file
             if (pendingSystemStatus == null) {
-                File delFile = new File(UPLOAD_PATH, uploadFileName);
+                File delFile = new File(SSHUtil.UPLOAD_PATH, uploadFileName);
                 FileUtils.deleteQuietly(delFile);
 
 
                 //delete all expired files in upload path
-                File delDir = new File(UPLOAD_PATH);
+                File delDir = new File(SSHUtil.UPLOAD_PATH);
                 if (delDir.isDirectory()) {
 
                     //set expire time to delete all files older than 48 hrs

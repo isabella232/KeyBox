@@ -81,7 +81,7 @@ public class AuthFilter implements Filter {
                     isDuoAuthenticated = true;
                 }
                 else {
-                    log.warn("user " + keyboxUser.getUsername() + " was not duo authenticated, sending them back to the duo screen");
+                    log.warn("user " + keyboxUser.getUsername() + " was not duo authenticated for request (" + ((HttpServletRequest) req).getRequestURI() + "), sending them back to the duo screen");
                     isDuoAuthenticated = false;
                 }
             }
