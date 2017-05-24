@@ -26,10 +26,13 @@
 
     <script type="text/javascript">
 
-        <%--Custom messages don't work anymore, so you may or may not see this text on unload--%>
-        $(window).on("beforeunload", function() {
-            return "Are you sure you want to leave?";
-        });
+        //Only prevent automatic redirect on terminal page
+        if(window.location.href.indexOf("createTerms.action") > -1) {
+            //Custom messages don't work anymore, so you may or may not see this text on unload
+            $(window).on("beforeunload", function () {
+                return "Are you sure you want to leave?";
+            });
+        }
 
         $(document).ready(function () {
 
@@ -637,8 +640,8 @@
 
 
     </div>
-    </s:if>
-    <s:else>
+</s:if>
+<s:else>
         <jsp:include page="../_res/inc/navigation.jsp"/>
 
     <div class="container">
@@ -646,7 +649,7 @@
 
         <p class="error">No sessions could be created</p>
     </div>
-    </s:else>
+</s:else>
 
     <div id="connect_to_host_dialog" class="modal fade">
         <div class="modal-dialog">

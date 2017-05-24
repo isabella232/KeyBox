@@ -59,6 +59,10 @@ public class SSHUtil {
 
 	public static final String SSH_PROXY_COMMAND = AppConfig.getProperty("sshProxyCommand");
 
+	public static final String STORAGE_PATH = AppConfig.getProperty("keyboxstorage");
+	public static final String DOWNLOAD_PATH = STORAGE_PATH + "/download";
+	public static final String UPLOAD_PATH = STORAGE_PATH + "/upload";
+
 	/**
 	 * returns the system's public key
 	 *
