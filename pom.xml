@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.keybox</groupId>
     <artifactId>keybox</artifactId>
-    <version>looker-2017-05-24</version>
+    <version>looker-2017-07-12</version>
     <packaging>war</packaging>
     <name>KeyBox</name>
     <properties>
