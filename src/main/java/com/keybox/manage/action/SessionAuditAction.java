@@ -15,18 +15,20 @@
  */
 package com.keybox.manage.action;
 
+import com.keybox.common.util.AuthUtil;
 import com.keybox.manage.db.SessionAuditDB;
 import com.keybox.manage.db.SystemDB;
 import com.keybox.manage.db.UserDB;
-import com.keybox.manage.model.HostSystem;
-import com.keybox.manage.model.SessionAudit;
-import com.keybox.manage.model.SortedSet;
+import com.keybox.manage.db.UserThemeDB;
+import com.keybox.manage.model.*;
 import com.google.gson.Gson;
-import com.keybox.manage.model.User;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import org.slf4j.Logger;
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Action to audit sessions and terminal history
  */
-public class SessionAuditAction extends ActionSupport implements ServletResponseAware {
+public class SessionAuditAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
     private static Logger log = LoggerFactory.getLogger(SessionAuditAction.class);
 
@@ -43,9 +45,11 @@ public class SessionAuditAction extends ActionSupport implements ServletResponse
     Long sessionId;
     Integer instanceId;
     SessionAudit sessionAudit;
+    HttpServletRequest servletRequest;
     HttpServletResponse servletResponse;
     List<HostSystem> systemList= SystemDB.getSystemSet(new SortedSet(SystemDB.SORT_BY_NAME)).getItemList();
     List<User> userList= UserDB.getUserSet(new SortedSet(SessionAuditDB.SORT_BY_USERNAME)).getItemList();
+    UserSettings userSettings;
 
     @Action(value = "/manage/viewSessions",
             results = {
@@ -76,6 +80,11 @@ public class SessionAuditAction extends ActionSupport implements ServletResponse
     public String getTermsForSession() {
 
         sessionAudit=SessionAuditDB.getSessionsTerminals(sessionId);
+
+        //set theme
+        Long userId = AuthUtil.getUserId(servletRequest.getSession());
+        this.userSettings = UserThemeDB.getTheme(userId);
+
         return SUCCESS;
 
     }
@@ -134,6 +143,14 @@ public class SessionAuditAction extends ActionSupport implements ServletResponse
         this.sessionAudit = sessionAudit;
     }
 
+    public HttpServletRequest getServletRequest() {
+        return servletRequest;
+    }
+
+    public void setServletRequest(HttpServletRequest servletRequest) {
+        this.servletRequest = servletRequest;
+    }
+
     public HttpServletResponse getServletResponse() {
         return servletResponse;
     }
@@ -148,5 +165,13 @@ public class SessionAuditAction extends ActionSupport implements ServletResponse
 
     public void setInstanceId(Integer instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public UserSettings getUserSettings() {
+        return userSettings;
+    }
+
+    public void setUserSettings(UserSettings userSettings) {
+        this.userSettings = userSettings;
     }
 }

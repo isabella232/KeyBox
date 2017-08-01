@@ -107,12 +107,11 @@ $(document).ready(function() {
 </script>
 <style type="text/css">
     .run_cmd {
-        min-width:600px ;
+        min-width:95% ;
 	}
     .terminal {
-        background-color: rgb(240, 240, 240);
-        color: rgb(77, 77, 77);
-        height:300px;
+        background-color: <s:property value="userSettings.bg"/>;
+        color: <s:property value="userSettings.bg"/>;
         overflow-y:scroll;
 
     }
@@ -121,7 +120,8 @@ $(document).ready(function() {
         margin:2px;
         white-space: pre-wrap;
         word-wrap: break-word;
-        background-color: #F5F5F5;
+        background-color: <s:property value="userSettings.bg"/>;
+        color: <s:property value="userSettings.fg"/>;
     }
 
     .align-right {
