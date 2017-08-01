@@ -21,12 +21,36 @@
 <head>
 
     <jsp:include page="../_res/inc/header.jsp"/>
+    <%--Using http://jscolor.com/ for color picker--%>
+    <script src="<%= request.getContextPath() %>/_res/js/jscolor.min.js"></script>
 
        <script type="text/javascript">
+
+           function update_colors() {
+
+               var fg = "#" + document.getElementById('fg_color').jscolor.toString();
+               var bg = "#" +document.getElementById('bg_color').jscolor.toString();
+               document.getElementById('example_text').setAttribute("style","background:" + bg + ";color:" + fg + ";width:230px;height:75px");
+               var plane = bg + "," + fg;
+               document.getElementById('usersettingsplane').value = plane;
+           }
+
         $(document).ready(function() {
 
             $(".submit_btn").button().click(function() {
                 $(this).closest('form').submit();
+            });
+
+            $("#term_colors").val('<s:property value="userSettings.plane"/>');
+
+            $("#term_colors").on('change',function(){
+                var plane = this.value;
+                var plane_split = plane.split(',');
+
+                document.getElementById('fg_color').jscolor.fromString(plane_split[1]);
+                document.getElementById('bg_color').jscolor.fromString(plane_split[0]);
+
+                update_colors();
             });
         });
 
@@ -69,13 +93,14 @@
         <p>Change the theme for your terminals below</p>
         <s:form action="themeSubmit">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" name="userSettings.plane" value="<s:property value="userSettings.plane"/>" id="usersettingsplane"/>
 
             <s:select name="userSettings.theme"
                       list="#{'#2e3436,#cc0000,#4e9a06,#c4a000,#3465a4,#75507b,#06989a,#d3d7cf,#555753,#ef2929,#8ae234,#fce94f,#729fcf,#ad7fa8,#34e2e2,#eeeeec':'Tango',
-                              '#000000,#cd0000,#00cd00,#cdcd00,#0000ee,#cd00cd,#00cdcd,#e5e5e5,#7f7f7f,#ff0000,#00ff00,#ffff00,#5c5cff,#ff00ff,#00ffff,#ffffff':'XTerm'}" 
+                              '#000000,#cd0000,#00cd00,#cdcd00,#0000ee,#cd00cd,#00cdcd,#e5e5e5,#7f7f7f,#ff0000,#00ff00,#ffff00,#5c5cff,#ff00ff,#00ffff,#ffffff':'XTerm'}"
                       label="Terminal Theme" headerKey="" headerValue="- Select Theme -"/>
-            
-            <s:select name="userSettings.plane"
+
+            <s:select id="term_colors"
                       list="#{'#FFFFDD,#000000':'Black on light yellow',
                               '#FFFFFF,#000000':'Black on white',
                               '#000000,#0EC6FF':'Blue on black',
@@ -85,8 +110,10 @@
                               }" label="Foreground / Background" headerKey=""
                       headerValue="- Select FG / BG -"/>
 
-
-            
+            <tr>
+                <td><input id="fg_color" class="jscolor {onFineChange:'update_colors()'}" style="width:6em" value="<s:property value="userSettings.fg"/>"/><input id="bg_color" class="jscolor {onFineChange:'update_colors()'}" style="width:6em" value="<s:property value="userSettings.bg"/>"/></td>
+                <td><textarea id="example_text" style='background:<s:property value="userSettings.bg"/>;color:<s:property value="userSettings.fg"/>;width:230px;height:75px'>This is an example of what a terminal will look like. Choose custom colors if you are feeling wild.</textarea></td>
+            </tr>
 
             <tr> <td>&nbsp;</td>
                 <td align="right">  <div id="theme_btn" class="btn btn-default submit_btn" >Update Theme</div></td>
