@@ -49,7 +49,7 @@
         <param name="encoding" value="UTF-8"/>
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n"/>
         </layout>
     </appender>
 

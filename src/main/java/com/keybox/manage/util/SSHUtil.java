@@ -396,7 +396,7 @@ public class SSHUtil {
 			String authorizedKeys = hostSystem.getAuthorizedKeys().replaceAll("~\\/|~", "");
 
 			Channel channel = session.openChannel("exec");
-			((ChannelExec) channel).setCommand("cat " + authorizedKeys);
+			((ChannelExec) channel).setCommand("echo " + authorizedKeys);
 			((ChannelExec) channel).setErrStream(System.err);
 			channel.setInputStream(null);
 
