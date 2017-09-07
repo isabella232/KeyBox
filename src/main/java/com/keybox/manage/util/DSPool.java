@@ -16,12 +16,11 @@
 package com.keybox.manage.util;
 
 import com.keybox.common.util.AppConfig;
-import org.apache.commons.dbcp.*;
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * Class to create a pooling data source object using commons DBCP
@@ -35,7 +34,7 @@ public class DSPool {
     private static String DB_PATH = DBUtils.class.getClassLoader().getResource("keydb").getPath();
 
 
-    private static PoolingDataSource dsPool;
+    private static BasicDataSource dsPool = null;
 
 
     /**
@@ -44,7 +43,7 @@ public class DSPool {
      * @return data source pool
      */
 
-    public static org.apache.commons.dbcp.PoolingDataSource getDataSource() {
+    public static BasicDataSource getDataSource() {
         if (dsPool == null) {
 
             dsPool = registerDataSource();
@@ -59,7 +58,7 @@ public class DSPool {
      * @return pooling database object
      */
 
-    private static PoolingDataSource registerDataSource() {
+    private static BasicDataSource registerDataSource() {
 
         final boolean externalDbEnabled = StringUtils.isNotEmpty(AppConfig.getProperty("dbListenPort"));
         final String DB_EXTERNAL_PORT = AppConfig.getProperty("dbListenPort");
@@ -70,6 +69,8 @@ public class DSPool {
         String user = "keybox";
         String password = "filepwd 45WJLnwhpA47EepT162hrVnDn3vYRvJhpZi0sVdvN9Sdsf";
 
+        BasicDataSource dataSource = new BasicDataSource();
+
         if(mysqlDbEnabled) {
             connectionURI = "jdbc:mysql://" + AppConfig.getProperty("mysqlHost") + ":" + AppConfig.getProperty("mysqlPort") + "/" + AppConfig.getProperty("mysqlDb") ;
             if (BooleanUtils.toBoolean(AppConfig.getProperty("mysqlDisableSSL"))) {
@@ -78,6 +79,7 @@ public class DSPool {
             user = AppConfig.getProperty("mysqlUser");
             password = AppConfig.getProperty("mysqlPass");
 
+            dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         } else {
 
             // create a database connection
@@ -88,28 +90,19 @@ public class DSPool {
                 connectionURI = "jdbc:h2:" + DB_PATH + "/keybox;CIPHER=AES";
             }
 
-            try {
-                Class.forName("org.h2.Driver");
-            } catch (ClassNotFoundException ex) {
-                log.error(ex.toString(), ex);
-            }
+            dataSource.setDriverClassName("org.h2.Driver");
         }
 
-        GenericObjectPool connectionPool = new GenericObjectPool(null);
+        dataSource.setMaxTotal(25);
+        dataSource.setTestOnBorrow(true);
+        dataSource.setMinIdle(2);
+        dataSource.setMaxWaitMillis(15000);
+        dataSource.setValidationQuery(validationQuery);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
+        dataSource.setUrl(connectionURI);
 
-        connectionPool.setMaxActive(25);
-        connectionPool.setTestOnBorrow(true);
-        connectionPool.setMinIdle(2);
-        connectionPool.setMaxWait(15000);
-        connectionPool.setWhenExhaustedAction(GenericObjectPool.WHEN_EXHAUSTED_BLOCK);
-
-
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectionURI, user, password);
-
-
-        new PoolableConnectionFactory(connectionFactory, connectionPool, null, validationQuery, false, true);
-
-        return new PoolingDataSource(connectionPool);
+        return dataSource;
 
     }
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n"/>
+        </Console>
+        <Console name="login-appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n"/>
+        </Console>
+        <!-- Alternative login audit appender example
+        <File name="login-appender" fileName="/var/log/keybox-login-audit.log" append="true">
+           <PatternLayout pattern="%d %-5p %c{1} - %m%n"/>
+        </File>
+        -->
+        <!-- System audit example using logstash
+        <Socket name="logstash-socket-appender" host="127.0.0.1" port="5300">
+            <SerializedLayout/>
+        </Socket>
+        -->
+        <RollingFile name="file"
+                     fileName="${jetty.base}/logs/keybox.log"
+                     filePattern="${jetty.base}/logs/keybox$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <!-- System audit example using logstash
+        <Logger name="com.keybox.manage.util.SystemAudit" level="info" additivity="false">
+            <AppenderRef ref="logstash-socket-appender"/>
+        </Logger>
+        -->
+        <logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="file"/>
+        </logger>
+        <Logger name="com.keybox.manage.action.LoginAudit" level="info" additivity="false">
+            <AppenderRef ref="login-appender"/>
+        </Logger>
+        <Root level="warn">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
