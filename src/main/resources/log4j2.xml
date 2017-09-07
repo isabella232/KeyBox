@@ -19,8 +19,8 @@
         </Socket>
         -->
         <RollingFile name="file"
-                     fileName="${jetty.base}/logs/keybox.log"
-                     filePattern="${jetty.base}/logs/keybox$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
+                     fileName="logs/keybox.log"
+                     filePattern="logs/keybox$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz"
                      append="true">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd/HH:mm:ss.SSS/zzz} %5p [%t] (%c) - %m%n</Pattern>
