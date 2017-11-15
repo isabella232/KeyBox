@@ -39,6 +39,14 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
         String userEmail = SAMLUtil.getAttribute(credential, SAMLUtil.EMAIL_ATTRIBUTE_NAME);
         String userFirstname = SAMLUtil.getAttribute(credential, SAMLUtil.FIRSTNAME_ATTRIBUTE_NAME);
         String userLastname = SAMLUtil.getAttribute(credential, SAMLUtil.LASTNAME_ATTRIBUTE_NAME);
+        String department;
+
+        try {
+            department = SAMLUtil.getAttribute(credential, SAMLUtil.DEPARTMENT_ATTRIBUTE_NAME);
+        } catch (IllegalArgumentException iae) {
+            department = null;
+            LOG.warn("User (" + userEmail + ") had no department, will not be adjusting group");
+        }
 
         LOG.info(userEmail + " is logged in");
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -72,6 +80,24 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
                 Long profileId = ProfileDB.insertProfile(profile);
                 profUserList.add(user.getId());
                 UserProfileDB.setUsersForProfile(profileId, profUserList);
+            }
+
+            if (department != null) {
+                // find profile for department
+                Profile profile = ProfileDB.getProfile(con, department);
+
+                // update user to be in this department (if it exists) and they are not already part of this department
+                if (profile != null && !UserProfileDB.checkIsUsersProfile(user.getId(), profile.getId())) {
+                    // get the current list of users
+                    List<Long> profileCurrentUserList = UserProfileDB.getUsersIdsByProfile(profile.getId());
+
+                    // add the current user to this list
+                    profileCurrentUserList.add(user.getId());
+
+                    UserProfileDB.setUsersForProfile(profile.getId(), profileCurrentUserList);
+                } else {
+                    LOG.warn("User (" + userEmail + ") had department (" + department + "), but no profile exists with that name.");
+                }
             }
 
             // Add proper authorities

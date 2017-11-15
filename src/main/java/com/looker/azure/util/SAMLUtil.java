@@ -18,6 +18,7 @@ public class SAMLUtil {
     public final static String EMAIL_ATTRIBUTE_NAME = AppConfig.getProperty("azureEmailName");
     public final static String FIRSTNAME_ATTRIBUTE_NAME = AppConfig.getProperty("azureFirstName");
     public final static String LASTNAME_ATTRIBUTE_NAME = AppConfig.getProperty("azureLastName");
+    public final static String DEPARTMENT_ATTRIBUTE_NAME = AppConfig.getProperty("azureDepartment");
 
     public static String getAttribute(SAMLCredential credential, String attributeName)
     {
@@ -32,7 +33,7 @@ public class SAMLUtil {
                 }
             }
         }
-        throw new IllegalArgumentException("no email attribute found");
+        throw new IllegalArgumentException("attribute (" + attributeName + ") not found");
     }
 
     private static String getAttributeValue(XMLObject attributeValue)

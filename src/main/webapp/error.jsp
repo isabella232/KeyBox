@@ -53,7 +53,7 @@
             %>
 
             <% if (cause.getClass().equals(CredentialsExpiredException.class)){ %>
-                <div class="warning">You SSO credentials have expired, please reset your session by going <a target="_blank" href="https://login.microsoftonline.com/">here</a> and logging in</div>
+                <div class="warning">You SSO credentials have expired, please globally log out by going <a target="_blank" href="https://www.office.com/estslogout?ru=%2f%3fref%3dlogout">here</a></div>
                 <div class="warning">Once you have done that, click <a href="<%= request.getContextPath() %>/admin/menu.action">here</a> to try again.</div>
             <% } else { %>
                 <div class="error"><%= cause.getClass() %></div>

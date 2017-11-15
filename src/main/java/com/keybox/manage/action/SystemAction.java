@@ -37,6 +37,7 @@ import java.util.List;
 public class SystemAction extends ActionSupport implements ServletRequestAware {
 
     SortedSet sortedSet = new SortedSet();
+    String textFilter;
     HostSystem hostSystem = new HostSystem();
     Script script = null;
     HttpServletRequest servletRequest;
@@ -54,10 +55,10 @@ public class SystemAction extends ActionSupport implements ServletRequestAware {
         Long userId = AuthUtil.getUserId(servletRequest.getSession());
 
         if (Auth.MANAGER.equals(AuthUtil.getUserType(servletRequest.getSession()))) {
-            sortedSet = SystemDB.getSystemSet(sortedSet);
+            sortedSet = SystemDB.getSystemSet(sortedSet, textFilter);
             profileList=ProfileDB.getAllProfiles();
         } else {
-            sortedSet = SystemDB.getUserSystemSet(sortedSet, userId);
+            sortedSet = SystemDB.getUserSystemSet(sortedSet, userId, textFilter);
             profileList= UserProfileDB.getProfilesByUser(userId);
         }
         if (script != null && script.getId() != null) {
@@ -74,7 +75,8 @@ public class SystemAction extends ActionSupport implements ServletRequestAware {
     )
     public String viewManageSystems() {
 
-        sortedSet = SystemDB.getSystemSet(sortedSet); 
+        sortedSet.setPage(-1); // need to get all results
+        sortedSet = SystemDB.getSystemSet(sortedSet, textFilter);
 
         return SUCCESS;
     }
@@ -213,4 +215,11 @@ public class SystemAction extends ActionSupport implements ServletRequestAware {
         this.servletRequest = servletRequest;
     }
 
+    public String getTextFilter() {
+        return textFilter;
+    }
+
+    public void setTextFilter(String textFilter) {
+        this.textFilter = textFilter;
+    }
 }

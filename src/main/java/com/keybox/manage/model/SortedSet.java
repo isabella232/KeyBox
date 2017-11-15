@@ -24,6 +24,8 @@ import java.util.List;
 public class SortedSet {
     private String orderByField = null;
     private String orderByDirection = "asc";
+    private Integer page = 0;
+    private Integer perPage = 100;
     private List itemList;
     private HashMap<String, String> filterMap = new HashMap<>();
 
@@ -77,5 +79,21 @@ public class SortedSet {
 
     public void setFilterMap(HashMap<String, String> filterMap) {
         this.filterMap = filterMap;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPerPage() {
+        return perPage;
+    }
+
+    public void setPerPage(Integer perpage) {
+        this.perPage = perpage;
     }
 }

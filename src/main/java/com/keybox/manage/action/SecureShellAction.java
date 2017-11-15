@@ -117,6 +117,7 @@ public class SecureShellAction extends ActionSupport implements ServletRequestAw
             //set allocated systems for connect to
             SortedSet sortedSet=new SortedSet();
             sortedSet.setOrderByField(SystemDB.SORT_BY_NAME);
+            sortedSet.setPage(-1); // must get all systems
             if (Auth.MANAGER.equals(AuthUtil.getUserType(servletRequest.getSession()))) {
                 sortedSet=SystemDB.getSystemSet(sortedSet);
             } else {

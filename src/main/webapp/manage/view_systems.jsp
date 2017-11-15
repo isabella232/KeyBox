@@ -96,6 +96,7 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <s:hidden name="sortedSet.orderByDirection"/>
             <s:hidden name="sortedSet.orderByField"/>
+            <s:hidden name="sortedSet.page" value="-1"/>
         </s:form>
 
         <h3>Manage Systems</h3>

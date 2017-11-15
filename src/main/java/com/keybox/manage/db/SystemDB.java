@@ -43,7 +43,6 @@ public class SystemDB {
 	public static final String SORT_BY_HOST = "host";
 	public static final String SORT_BY_STATUS = "status_cd";
 
-
 	/**
 	 * method to do order by based on the sorted set object for systems for user
 	 *
@@ -52,16 +51,44 @@ public class SystemDB {
 	 * @return sortedSet with list of host systems
 	 */
 	public static SortedSet getUserSystemSet(SortedSet sortedSet, Long userId) {
+		return getUserSystemSet(sortedSet, userId, null);
+	}
+
+	/**
+	 * method to do order by based on the sorted set object for systems for user
+	 *
+	 * @param sortedSet sorted set object
+	 * @param userId    user id
+	 * @return sortedSet with list of host systems
+	 */
+	public static SortedSet getUserSystemSet(SortedSet sortedSet, Long userId, String filter) {
 		List<HostSystem> hostSystemList = new ArrayList<HostSystem>();
 
-		String orderBy = "order by " + SystemDB.SORT_BY_NAME;
-		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
-			orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
+		String filterSQL = "";
+		if (StringUtils.isNotEmpty(filter)) {
+			filterSQL = " and s.display_nm LIKE ?";
+			sortedSet.setPage(0);
+			sortedSet.setPerPage(100);
+			filter = "%" + filter + "%";
 		}
-		String sql = "select * from system where id in (select distinct system_id from  system_map m, user_map um where m.profile_id=um.profile_id and um.user_id=? ";
+
+		String orderBy = " order by " + SystemDB.SORT_BY_NAME;
+		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
+			orderBy = " order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
+		}
+
+		String limit = "";
+		if (sortedSet.getPage() > -1 && sortedSet.getPerPage() > 0) {
+			limit = " LIMIT " + (sortedSet.getPage() * sortedSet.getPerPage()) + "," + sortedSet.getPerPage();
+		}
+
+		String sql = "select * from system s where id in (select distinct system_id from  system_map m, user_map um where m.profile_id=um.profile_id and um.user_id=? ";
 		//if profile id exists add to statement
 		sql += StringUtils.isNotEmpty(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID)) ? " and um.profile_id=? " : "";
-		sql += ") " + orderBy;
+		sql += ") ";
+		sql += filterSQL;
+		sql += orderBy;
+		sql += limit;
 
 		//get user for auth token
 		Connection con = null;
@@ -72,7 +99,15 @@ public class SystemDB {
 			//filter by profile id if exists
 			if (StringUtils.isNotEmpty(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID))) {
 				stmt.setLong(2, Long.valueOf(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID)));
+				if (StringUtils.isNotEmpty(filter)) {
+					stmt.setString(3, filter);
+				}
+			} else {
+				if (StringUtils.isNotEmpty(filter)) {
+					stmt.setString(2, filter);
+				}
 			}
+
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -101,7 +136,6 @@ public class SystemDB {
 
 	}
 
-
 	/**
 	 * method to do order by based on the sorted set object for systems
 	 *
@@ -109,16 +143,42 @@ public class SystemDB {
 	 * @return sortedSet with list of host systems
 	 */
 	public static SortedSet getSystemSet(SortedSet sortedSet) {
+		return getSystemSet(sortedSet, null);
+	}
+
+	/**
+	 * method to do order by based on the sorted set object for systems
+	 *
+	 * @param sortedSet sorted set object
+	 * @return sortedSet with list of host systems
+	 */
+	public static SortedSet getSystemSet(SortedSet sortedSet, String filter) {
 		List<HostSystem> hostSystemList = new ArrayList<HostSystem>();
 
-		String orderBy = "order by " + SystemDB.SORT_BY_NAME;
-		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
-			orderBy = "order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
+		String filterSQL = "";
+		if (StringUtils.isNotEmpty(filter)) {
+			filterSQL = " where s.display_nm LIKE ?";
+			sortedSet.setPage(0);
+			sortedSet.setPerPage(100);
+			filter = "%" + filter + "%";
 		}
+
+		String orderBy = " order by " + SystemDB.SORT_BY_NAME;
+		if (sortedSet.getOrderByField() != null && !sortedSet.getOrderByField().trim().equals("")) {
+			orderBy = " order by " + sortedSet.getOrderByField() + " " + sortedSet.getOrderByDirection();
+		}
+
+		String limit = "";
+		if (sortedSet.getPage() > -1 && sortedSet.getPerPage() > 0) {
+			limit = " LIMIT " + (sortedSet.getPage() * sortedSet.getPerPage()) + "," + sortedSet.getPerPage();
+		}
+
 		String sql = "select * from  system s ";
 		//if profile id exists add to statement
 		sql += StringUtils.isNotEmpty(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID)) ? ",system_map m where s.id=m.system_id and m.profile_id=?" : "";
+		sql += filterSQL;
 		sql += orderBy;
+		sql += limit;
 
 		Connection con = null;
 		try {
@@ -126,6 +186,13 @@ public class SystemDB {
 			PreparedStatement stmt = con.prepareStatement(sql);
 			if (StringUtils.isNotEmpty(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID))) {
 				stmt.setLong(1, Long.valueOf(sortedSet.getFilterMap().get(FILTER_BY_PROFILE_ID)));
+				if (StringUtils.isNotEmpty(filter)) {
+					stmt.setString(2, filter);
+				}
+			} else {
+				if (StringUtils.isNotEmpty(filter)) {
+					stmt.setString(1, filter);
+				}
 			}
 			ResultSet rs = stmt.executeQuery();
 

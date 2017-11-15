@@ -16,3 +16,10 @@ target/*
 .classpath
 .project
 .settings/*
+
+# exclude hosts.yml symlink
+keybox-loader-mysql/hosts.yml
+# exclude metadata xml file
+src/main/resources/security/*.xml
+# exclude any logs written
+logs/

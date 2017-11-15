@@ -97,6 +97,7 @@
                                             <td class="align_left">
                                             <s:select name="sortedSet.filterMap['%{@com.keybox.manage.db.SessionAuditDB@FILTER_BY_SYSTEM_ID}']" listKey="id" listValue="displayLabel"
                                             class="view_frm_select"
+                                            style="display: none;"
                                             list="systemList"
                                             headerKey=""
                                             headerValue="-Select System-"/>
@@ -123,12 +124,13 @@
                         Username
                     </th>
 
-                    <th id="<s:property value="@com.keybox.manage.db.SessionAuditDB@SORT_BY_LAST_NM"/>" class="sort">
-                        Last Name
-                    </th>
                     <th id="<s:property value="@com.keybox.manage.db.SessionAuditDB@SORT_BY_FIRST_NM"/>" class="sort">
                         First Name
                     </th>
+                    <th id="<s:property value="@com.keybox.manage.db.SessionAuditDB@SORT_BY_LAST_NM"/>" class="sort">
+                        Last Name
+                    </th>
+
                     <th id="<s:property value="@com.keybox.manage.db.SessionAuditDB@SORT_BY_SESSION_TM"/>" class="sort">
                         Session Time
                     </th>
@@ -141,8 +143,8 @@
                     <tr>
 
                         <td><s:property value="user.username"/></td>
-                        <td><s:property value="user.lastNm"/></td>
                         <td><s:property value="user.firstNm"/></td>
+                        <td><s:property value="user.lastNm"/></td>
                         <td><s:date name="sessionTm"/></td>
                         <td>
                             <div id="terminals_btn_<s:property value='id'/>" class="btn btn-default terminals_btn">

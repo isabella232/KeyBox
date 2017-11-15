@@ -45,6 +45,7 @@ public class ProfileSystemsAction extends ActionSupport {
     public String viewProfileSystems() {
         if (profile != null && profile.getId() != null) {
             profile = ProfileDB.getProfile(profile.getId());
+            sortedSet.setPage(-1); // need all systems available
             sortedSet = SystemDB.getSystemSet(sortedSet);
         }
         return SUCCESS;

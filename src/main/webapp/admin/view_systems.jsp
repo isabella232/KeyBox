@@ -99,30 +99,45 @@
             </s:else>
 
         <s:form id="viewSystems" action="viewSystems" theme="simple">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        <s:hidden name="sortedSet.orderByDirection"/>
-        <s:hidden name="sortedSet.orderByField"/>
-        <s:if test="script!=null">
-            <s:hidden name="script.id"/>
-        </s:if>
-        <s:if test="profileList!= null && !profileList.isEmpty()">
-           <div>
-                     <table>
-                        <tr>
-                            <td class="align_left">
-                                <s:select name="sortedSet.filterMap['%{@com.keybox.manage.db.SystemDB@FILTER_BY_PROFILE_ID}']" listKey="id" listValue="nm"
-                                class="view_frm_select"
-                                list="profileList"
-                                headerKey=""
-                                headerValue="-Select Profile-"/>
-                            </td>
-                            <td>
-                                <div id="view_btn" class="btn btn-default">Filter</div>
-                            </td>
-                        </tr>
-                     </table>
-           </div>
-        </s:if>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <s:hidden name="sortedSet.orderByDirection"/>
+            <s:hidden name="sortedSet.orderByField"/>
+            <s:hidden name="sortedSet.page" id="page_filter"/>
+            <s:hidden name="sortedSet.perPage" id="perpage_filter"/>
+            <s:if test="script!=null">
+                <s:hidden name="script.id"/>
+            </s:if>
+            <s:if test="profileList!= null && !profileList.isEmpty()">
+               <div>
+                 <table>
+                    <tr>
+                        <td class="align_left">
+                            <s:select name="sortedSet.filterMap['%{@com.keybox.manage.db.SystemDB@FILTER_BY_PROFILE_ID}']" listKey="id" listValue="nm"
+                            class="view_frm_select"
+                            style="display: none;"
+                            list="profileList"
+                            headerKey=""
+                            headerValue="-Select Profile-"/>
+                        </td>
+                        <td class="align_left">
+                            Text Filter
+                            <s:textfield name="textFilter" value="%{textFilter}" onChange="$('#page_filter').val(0); $('#page_filter_input').val(0); $('#perpage_filter').val(100); $('#perpage_filter_input').val(100);"/>
+                        </td>
+                        <td class="align_left">
+                            Page
+                            <s:textfield name="page" value="%{sortedSet.page}" id="page_filter_input" onChange="$('#page_filter').val($('#page_filter_input').val());" style="width:2em"/>
+                        </td>
+                        <td class="align_left">
+                            Per Page
+                            <s:textfield name="perPage" value="%{sortedSet.perPage}" id="perpage_filter_input" onChange="$('#perpage_filter').val($('#perpage_filter_input').val());" style="width:4em"/>
+                        </td>
+                        <td>
+                            <div id="view_btn" class="btn btn-default">Update</div>
+                        </td>
+                    </tr>
+                 </table>
+               </div>
+            </s:if>
         </s:form>
         <s:if test="sortedSet.itemList!= null && !sortedSet.itemList.isEmpty()">
 
@@ -167,7 +182,7 @@
                     </tbody>
                 </table>
                 </div>
-	    </s:form>
+	        </s:form>
         </s:if>
         <s:if test="script!=null && sortedSet.itemList!= null && !sortedSet.itemList.isEmpty()">
             <div class="btn btn-default select_frm_btn spacer spacer-bottom">Execute Script</div>
@@ -177,7 +192,7 @@
         </s:elseif>
         <s:else>
             <div class="actionMessage">
-                <p class="error">Systems not available
+                <p class="error">No systems exist for this user and/or filter
                     <s:if test="%{#session.userType==\"M\"}">
                     (<a href="../manage/viewSystems.action">Manage Systems</a>)
                     </s:if>.

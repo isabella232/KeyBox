@@ -167,6 +167,39 @@ public class ProfileDB {
     }
 
     /**
+     * returns profile based on profile name
+     *
+     * @param con db connection object
+     * @param profileName profile name
+     * @return profile
+     */
+    public static Profile getProfile(Connection con, String profileName) {
+
+        Profile profile = null;
+        try {
+            PreparedStatement stmt = con.prepareStatement("select * from profiles where nm=?");
+            stmt.setString(1, profileName);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                profile = new Profile();
+                profile.setId(rs.getLong("id"));
+                profile.setNm(rs.getString("nm"));
+                profile.setDescr(rs.getString("descr"));
+                profile.setHostSystemList(ProfileSystemsDB.getSystemsByProfile(con, rs.getLong("id")));
+
+            }
+            DBUtils.closeRs(rs);
+            DBUtils.closeStmt(stmt);
+
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        }
+
+        return profile;
+    }
+
+    /**
      * inserts new profile
      *
      * @param profile profile object
