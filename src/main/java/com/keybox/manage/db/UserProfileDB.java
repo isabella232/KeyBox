@@ -150,6 +150,33 @@ public class UserProfileDB {
 
     /**
      * get users associated with profile
+     * @param profileId profile id
+     * @return user list
+     */
+    public static List<Long> getUsersIdsByProfile(Long profileId) {
+
+
+        Connection con = null;
+        List<Long> userIdsList = new ArrayList<>();
+        try {
+            List<User> userList;
+            con = DBUtils.getConn();
+            userList = getUsersByProfile(con, profileId);
+            for (User user : userList) {
+                userIdsList.add(user.getId());
+            }
+
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        }
+        DBUtils.closeConn(con);
+        return userIdsList;
+
+
+    }
+
+    /**
+     * get users associated with profile
      * @param con DB connection
      * @param profileId profile id
      * @return user list

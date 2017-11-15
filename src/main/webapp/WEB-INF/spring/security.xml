@@ -61,14 +61,9 @@
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/admin/duo.action"/>
+        <!--turns out that we don't need to point this right at duo, and the spring security chain will properly redirect back if they are not duo authenticated-->
+        <property name="defaultTargetUrl" value="/admin/menu.action"/>
     </bean>
-    <!--
-    Use the following for interpreting RelayState coming from unsolicited response as redirect URL:
-    <bean id="successRedirectHandler" class="org.springframework.security.saml.SAMLRelayStateSuccessHandler">
-       <property name="defaultTargetUrl" value="/" />
-    </bean>
-    -->
 
     <!-- Handler deciding where to redirect user after failed login -->
     <bean id="failureRedirectHandler"
@@ -142,12 +137,9 @@
     <bean id="metadata" class="org.springframework.security.saml.metadata.CachingMetadataManager">
         <constructor-arg>
             <list>
-                <bean class="org.opensaml.saml2.metadata.provider.HTTPMetadataProvider">
+                <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                     <constructor-arg>
-                        <value type="java.lang.String">${azureMetadataURL}</value>
-                    </constructor-arg>
-                    <constructor-arg>
-                        <value type="int">5000</value>
+                        <value type="java.io.File">${azureMetadataXMLFile}</value>
                     </constructor-arg>
                     <property name="parserPool" ref="parserPool"/>
                 </bean>
