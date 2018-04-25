@@ -71,6 +71,17 @@ def get_or_create_profile(db_conn, profile_name)
   profile_id
 end
 
+def populate_profile_with_all_hosts(db_conn, profile_id)
+  # remove all hosts from profile
+  db_conn[:system_map].where(:profile_id => "#{profile_id}").delete
+  # retrieve all current hosts
+  current_db_hosts = db_conn[:system].select(:id, :display_nm).map  { |h| h.values }
+  # add each host to all hosts profile
+  current_db_hosts.each do |host_id|
+    db_conn[:system_map].insert(:profile_id => profile_id, :system_id => host_id[0])
+  end
+end
+
 # START OF MAIN
 ####################################################################
 authkey = DB[:application_key].get(:public_key)
@@ -93,24 +104,25 @@ DB.transaction do
   remove_absent_hosts(DB)
 
   all_hosts_profile_id = get_or_create_profile(DB, 'all_hosts')
+  populate_profile_with_all_hosts(DB, all_hosts_profile_id)
 
-  # remove all hosts from profile
-  DB[:system_map].where(:profile_id => "#{all_hosts_profile_id}").delete
-  # retrieve all current hosts
-  current_db_hosts = DB[:system].select(:id, :display_nm).map  { |h| h.values }
-  # add each host to all hosts profile
-  current_db_hosts.each do |host_id|
-    DB[:system_map].insert(:profile_id => all_hosts_profile_id, :system_id => host_id[0])
-  end
-
-  # todo, add appropriate hosts to their respective profiles (after host.yml update)
-  #  for now, just add the profiles
   cs_hosts_profile_id = get_or_create_profile(DB, 'Customer Success')
+  populate_profile_with_all_hosts(DB, cs_hosts_profile_id)
+
   dcl_hosts_profile_id = get_or_create_profile(DB, 'DCL')
+  populate_profile_with_all_hosts(DB, dcl_hosts_profile_id)
+
   eng_hosts_profile_id = get_or_create_profile(DB, 'Engineering')
+  populate_profile_with_all_hosts(DB, eng_hosts_profile_id)
+
+  se_hosts_profile_id = get_or_create_profile(DB, 'Sales Engineering')
+  populate_profile_with_all_hosts(DB, se_hosts_profile_id)
+
+  ops_hosts_profile_id = get_or_create_profile(DB, 'Ops')
+  populate_profile_with_all_hosts(DB, ops_hosts_profile_id)
+
   it_hosts_profile_id = get_or_create_profile(DB, 'IT')
   marketing_hosts_profile_id = get_or_create_profile(DB, 'Marketing')
-  ops_hosts_profile_id = get_or_create_profile(DB, 'Ops')
 end
 
 # END OF MAIN
