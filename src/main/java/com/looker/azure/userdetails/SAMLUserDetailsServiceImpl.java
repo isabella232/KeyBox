@@ -27,7 +27,7 @@ import java.util.UUID;
 public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
 
     // Logger
-    private static final Logger LOG = LoggerFactory.getLogger(SAMLUserDetailsServiceImpl.class);
+    private static Logger LOG = LoggerFactory.getLogger(SAMLUserDetailsServiceImpl.class);
 
     public Object loadUserBySAML(SAMLCredential credential)
             throws UsernameNotFoundException {
@@ -42,7 +42,8 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
         String department;
 
         try {
-            department = SAMLUtil.getAttribute(credential, SAMLUtil.DEPARTMENT_ATTRIBUTE_NAME);
+            department = SAMLUtil.departmentFromGroups(SAMLUtil.getGroupIds(credential));
+            LOG.info("Set department group (" + department + ") for user (" + userEmail + ")");
         } catch (IllegalArgumentException iae) {
             department = null;
             LOG.warn("User (" + userEmail + ") had no department, will not be adjusting group");
@@ -87,14 +88,18 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
                 Profile profile = ProfileDB.getProfile(con, department);
 
                 // update user to be in this department (if it exists) and they are not already part of this department
-                if (profile != null && !UserProfileDB.checkIsUsersProfile(user.getId(), profile.getId())) {
-                    // get the current list of users
-                    List<Long> profileCurrentUserList = UserProfileDB.getUsersIdsByProfile(profile.getId());
+                if (profile != null) {
+                    if (UserProfileDB.checkIsUsersProfile(user.getId(), profile.getId())) {
+                        LOG.info("User (" + userEmail + ") already was in department (" + department + ")");
+                    } else {
+                        // get the current list of users
+                        List<Long> profileCurrentUserList = UserProfileDB.getUsersIdsByProfile(profile.getId());
 
-                    // add the current user to this list
-                    profileCurrentUserList.add(user.getId());
+                        // add the current user to this list
+                        profileCurrentUserList.add(user.getId());
 
-                    UserProfileDB.setUsersForProfile(profile.getId(), profileCurrentUserList);
+                        UserProfileDB.setUsersForProfile(profile.getId(), profileCurrentUserList);
+                    }
                 } else {
                     LOG.warn("User (" + userEmail + ") had department (" + department + "), but no profile exists with that name.");
                 }

@@ -121,6 +121,7 @@
             <bean class="org.springframework.security.saml.metadata.MetadataGenerator">
                 <property name="entityId" value="${azureEntityID}"/>
                 <property name="wantAssertionSigned" value="false"/>
+                <property name="entityBaseURL" value="${azureEntityBaseURL}"/>
             </bean>
         </constructor-arg>
     </bean>

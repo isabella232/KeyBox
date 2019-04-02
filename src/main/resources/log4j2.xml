@@ -44,6 +44,10 @@
             <AppenderRef ref="console"/>
             <AppenderRef ref="file"/>
         </logger>
+        <logger name="com.looker" level="info" additivity="false">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="file"/>
+        </logger>
         <Logger name="com.keybox.manage.action.LoginAudit" level="info" additivity="false">
             <AppenderRef ref="login-appender"/>
         </Logger>
